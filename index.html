@@ -28,8 +28,31 @@
     overflow: hidden;
     color: #6d3348;
     text-align: center;
-    padding: 30px 20px;
+    padding: 95px 20px 35px 20px;
   }
+  /* 가게 지붕 (차양) */
+  header .roof {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 46px;
+    /* 빨강과 흰색 줄무늬 */
+    background: repeating-linear-gradient(90deg, #e23a5e 0 34px, #fff6f8 34px 68px);
+  }
+  /* 지붕 아래쪽 물결 모양 */
+  header .roof::after {
+    content: "";
+    position: absolute;
+    top: 46px;
+    left: 0;
+    right: 0;
+    height: 17px;
+    background-image: radial-gradient(circle at 17px 0, #c62a4e 16px, transparent 17px);
+    background-size: 34px 17px;
+    background-repeat: repeat-x;
+  }
+
   /* 헤더 왼쪽 포도송이 장식 */
   header .grape {
     position: absolute;
@@ -354,6 +377,8 @@
 
 <!-- 맨 위: 가게 이름과 소개 -->
 <header id="home">
+  <!-- 가게 지붕 -->
+  <div class="roof"></div>
   <!-- 왼쪽 포도송이 장식 (그림) -->
   <svg class="grape" viewBox="0 0 120 170" fill="#6d3348">
     <path d="M60 82 V44" stroke="#6d3348" stroke-width="4" fill="none"/>
