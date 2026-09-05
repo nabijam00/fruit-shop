@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>무지개 과일 백화점</title>
+
+<style>
+  /* 공통 스타일 */
+  body {
+    margin: 0;
+    font-family: "굴림", Gulim, sans-serif;
+    background-color: #fff7f9;
+    color: #4a3038;
+  }
+
+  /* 맨 위 (헤더) */
+  header {
+    background-color: #f5cdd8;
+    position: relative;   /* 포도 그림의 기준 위치 */
+    overflow: hidden;
+    color: #6d3348;
+    text-align: center;
+    padding: 30px 20px;
+  }
+  /* 헤더 왼쪽 포도송이 장식 */
+  header .grape {
+    position: absolute;
+    left: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 130px;
+    opacity: 0.22;        /* 숫자가 작을수록 더 은은해집니다 */
+    z-index: -1;
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 32px;
+    letter-spacing: 2px;
+  }
+  header p {
+    margin: 10px 0 0 0;
+    font-size: 15px;
+    color: #96637a;
+  }
+
+  /* 메뉴 */
+  nav {
+    background-color: #eab0c2;
+    text-align: center;
+    padding: 14px 0;
+  }
+  nav a {
+    color: #5e2b3d;
+    text-decoration: none;
+    margin: 0 18px;
+    font-size: 15px;
+  }
+  nav a:hover {
+    color: #ffffff;
+  }
+
+  /* 배너 */
+  .banner {
+    background-color: #fbe0e8;
+    color: #6d3348;
+    text-align: center;
+    padding: 70px 20px;
+  }
+  .banner h2 {
+    font-size: 30px;
+    margin: 0 0 12px 0;
+  }
+  .banner p {
+    font-size: 16px;
+    color: #96637a;
+    margin: 0 0 25px 0;
+  }
+  .banner button {
+    background-color: #b85c7a;
+    color: #ffffff;
+    border: none;
+    padding: 14px 34px;
+    font-size: 16px;
+    border-radius: 30px;
+    cursor: pointer;
+  }
+  .banner button:hover {
+    background-color: #a04a68;
+  }
+
+  /* 상품 영역 */
+  h3.title {
+    text-align: center;
+    font-size: 24px;
+    margin: 50px 0 30px 0;
+  }
+  /* 카테고리 버튼 */
+  .categories {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .categories button {
+    background-color: #ffffff;
+    color: #8c2f4c;
+    border: 2px solid #eab0c2;
+    padding: 9px 22px;
+    margin: 0 5px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  /* 선택된 버튼 */
+  .categories button.on {
+    background-color: #8c2f4c;
+    color: #ffffff;
+    border-color: #8c2f4c;
+  }
+
+  .products {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 25px;
+    padding: 0 20px 50px 20px;
+  }
+  .card {
+    background-color: #ffffff;
+    border: 1px solid #f3dde4;
+    border-radius: 12px;
+    position: relative;   /* 추천상품 표시의 기준 위치 */
+    width: 250px;
+    text-align: center;
+    padding: 20px 15px;
+  }
+  /* 추천상품 표시 */
+  .card .best {
+    position: absolute;
+    top: 28px;
+    left: 23px;
+    background-color: #8c2f4c;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px 12px;
+    border-radius: 15px;
+  }
+
+  /* 상품 사진 */
+  .card .photo {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border: 3px solid #b85c7a;   /* 사진 테두리 */
+    box-sizing: border-box;
+    border-radius: 8px;
+  }
+  .card h4 {
+    font-size: 18px;
+    margin: 15px 0 10px 0;
+  }
+  .card .old-price {
+    color: #b3a0a7;
+    text-decoration: line-through;
+    font-size: 14px;
+    margin: 0;
+  }
+  /* 할인율 표시 */
+  .card .sale {
+    color: #d13a5e;
+    font-weight: bold;
+    margin-right: 6px;
+  }
+  .card .price {
+    color: #b85c7a;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 5px 0 15px 0;
+  }
+  .card button {
+    background-color: #b85c7a;
+    color: #ffffff;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  .card button:hover {
+    background-color: #a04a68;
+  }
+
+  /* 맨 아래 (푸터) */
+  footer {
+    background-color: #6d3348;
+    color: #f5dfe6;
+    text-align: center;
+    padding: 30px 20px;
+    font-size: 14px;
+  }
+</style>
+</head>
+
+<body>
+
+<!-- 맨 위: 가게 이름과 소개 -->
+<header>
+  <!-- 왼쪽 포도송이 장식 (그림) -->
+  <svg class="grape" viewBox="0 0 120 170" fill="#6d3348">
+    <path d="M60 82 V44" stroke="#6d3348" stroke-width="4" fill="none"/>
+    <path d="M62 46 C78 24 100 26 108 34 C96 52 76 56 62 46 Z"/>
+    <circle cx="24" cy="86" r="14"/>
+    <circle cx="48" cy="86" r="14"/>
+    <circle cx="72" cy="86" r="14"/>
+    <circle cx="96" cy="86" r="14"/>
+    <circle cx="36" cy="108" r="14"/>
+    <circle cx="60" cy="108" r="14"/>
+    <circle cx="84" cy="108" r="14"/>
+    <circle cx="48" cy="130" r="14"/>
+    <circle cx="72" cy="130" r="14"/>
+    <circle cx="60" cy="150" r="14"/>
+  </svg>
+  <h1>무지개 과일 백화점</h1>
+  <p>일곱 빛깔 무지개처럼, 세상의 좋은 과일을 한자리에</p>
+</header>
+
+<!-- 메뉴 4개 -->
+<nav>
+  <a href="#">홈</a>
+  <a href="#">전체상품</a>
+  <a href="#">이벤트</a>
+  <a href="#">고객센터</a>
+</nav>
+
+<!-- 큰 배너 -->
+<div class="banner">
+  <h2>오늘 수확한 제철 과일, 오늘 배송</h2>
+  <p>신선함이 다른 프리미엄 과일 선물세트</p>
+  <button onclick="showAlert('지금 특별한 과일을 만나보세요!')">지금 구경하기</button>
+</div>
+
+<!-- 상품 목록 -->
+<h3 class="title">이번 주 신선한 과일</h3>
+<!-- 카테고리 버튼 -->
+<div class="categories">
+  <button class="on" onclick="showCategory('전체', this)">전체</button>
+  <button onclick="showCategory('추천', this)">추천상품</button>
+  <button onclick="showCategory('국산', this)">국산과일</button>
+  <button onclick="showCategory('수입', this)">수입과일</button>
+</div>
+
+<div class="products">
+
+  <div class="card" data-category="수입">
+    <img class="photo" src="images/mango.jpg" alt="망고">
+    <h4>프리미엄 애플망고</h4>
+    <p class="old-price">45,000원</p>
+    <p class="price"><span class="sale">10%</span>40,500원</p>
+    <button onclick="showAlert('프리미엄 애플망고를 담았습니다!')">장바구니</button>
+  </div>
+
+  <div class="card" data-category="국산 추천">
+    <span class="best">추천상품</span>
+    <img class="photo" src="images/apple.jpg" alt="사과">
+    <h4>아침 햇살 꿀사과</h4>
+    <p class="old-price">32,000원</p>
+    <p class="price"><span class="sale">10%</span>28,800원</p>
+    <button onclick="showAlert('아침 햇살 꿀사과를 담았습니다!')">장바구니</button>
+  </div>
+
+  <div class="card" data-category="국산">
+    <img class="photo" src="images/melon.jpg" alt="멜론">
+    <h4>고당도 머스크멜론</h4>
+    <p class="old-price">48,000원</p>
+    <p class="price"><span class="sale">10%</span>43,200원</p>
+    <button onclick="showAlert('고당도 머스크멜론을 담았습니다!')">장바구니</button>
+  </div>
+
+  <div class="card" data-category="국산 추천">
+    <span class="best">추천상품</span>
+    <img class="photo" src="images/grape.jpg" alt="샤인머스캣">
+    <h4>씨없는 샤인머스캣</h4>
+    <p class="old-price">52,000원</p>
+    <p class="price"><span class="sale">10%</span>46,800원</p>
+    <button onclick="showAlert('씨없는 샤인머스캣을 담았습니다!')">장바구니</button>
+  </div>
+
+  <div class="card" data-category="국산">
+    <img class="photo" src="images/strawberry.jpg" alt="딸기">
+    <h4>프리미엄 설향 딸기</h4>
+    <p class="old-price">34,000원</p>
+    <p class="price"><span class="sale">10%</span>30,600원</p>
+    <button onclick="showAlert('프리미엄 설향 딸기를 담았습니다!')">장바구니</button>
+  </div>
+
+  <div class="card" data-category="수입">
+    <img class="photo" src="images/blueberry.jpg" alt="블루베리">
+    <h4>알알이 생블루베리</h4>
+    <p class="old-price">35,000원</p>
+    <p class="price"><span class="sale">10%</span>31,500원</p>
+    <button onclick="showAlert('알알이 생블루베리를 담았습니다!')">장바구니</button>
+  </div>
+
+</div>
+
+<!-- 맨 아래: 연락처 -->
+<footer>
+  <p>무지개 과일 백화점</p>
+  <p>전화: 010-1234-5678 | 이메일: jihanefruit@example.com</p>
+  <p>운영시간: 평일 09:00 ~ 18:00 (주말 · 공휴일 휴무)</p>
+</footer>
+
+<script>
+  // 버튼을 누르면 알림창이 뜹니다
+  function showAlert(message) {
+    alert(message);
+  }
+
+  // 카테고리 버튼을 누르면 그 상품만 보여줍니다
+  function showCategory(category, clickedButton) {
+    var cards = document.querySelectorAll('.card');
+    for (var i = 0; i < cards.length; i++) {
+      var myCategory = cards[i].getAttribute('data-category');
+      if (category === '전체' || myCategory.indexOf(category) > -1) {
+        cards[i].style.display = 'block';
+      } else {
+        cards[i].style.display = 'none';
+      }
+    }
+
+    // 누른 버튼만 색을 진하게 표시합니다
+    var buttons = document.querySelectorAll('.categories button');
+    for (var j = 0; j < buttons.length; j++) {
+      buttons[j].classList.remove('on');
+    }
+    clickedButton.classList.add('on');
+  }
+</script>
+
+</body>
+</html>
