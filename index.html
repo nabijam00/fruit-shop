@@ -107,6 +107,31 @@
     font-size: 24px;
     margin: 50px 0 30px 0;
   }
+  /* 검색창 */
+  .search {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .search input {
+    width: 320px;
+    max-width: 80%;
+    padding: 12px 18px;
+    border: 2px solid #eab0c2;
+    border-radius: 25px;
+    font-size: 15px;
+    font-family: "굴림", Gulim, sans-serif;
+    color: #4a3038;
+  }
+  /* 검색 결과가 없을 때 안내 문구 */
+  .no-result {
+    display: none;
+    text-align: center;
+    color: #8c2f4c;
+    font-size: 16px;
+    line-height: 1.8;
+    padding: 40px 20px 60px 20px;
+  }
+
   /* 카테고리 버튼 */
   .categories {
     text-align: center;
@@ -353,6 +378,11 @@
 
 <!-- 상품 목록 -->
 <h3 class="title">이번 주 신선한 과일</h3>
+<!-- 검색창 -->
+<div class="search">
+  <input type="text" id="searchBox" oninput="filterProducts()" placeholder="찾으시는 과일 이름을 적어보세요">
+</div>
+
 <!-- 카테고리 버튼 -->
 <div class="categories">
   <button class="on" onclick="showCategory('전체', this)">전체</button>
@@ -511,6 +541,12 @@
 
 </div>
 
+<!-- 검색 결과가 없을 때 -->
+<p class="no-result" id="noResult">
+  찾으시는 상품이 없습니다.<br>
+  다른 이름으로 찾아보시거나, 위 카테고리에서 '전체'를 눌러보세요.
+</p>
+
 <!-- 쇼핑몰 소개 -->
 <div class="about">
   <h3>무지개 과일 백화점 이야기</h3>
@@ -580,6 +616,9 @@
 </footer>
 
 <script>
+  // 지금 선택된 카테고리를 기억해 둡니다
+  var nowCategory = '전체';
+
   // 버튼을 누르면 알림창이 뜹니다
   function showAlert(message) {
     alert(message);
@@ -587,15 +626,7 @@
 
   // 카테고리 버튼을 누르면 그 상품만 보여줍니다
   function showCategory(category, clickedButton) {
-    var cards = document.querySelectorAll('.card');
-    for (var i = 0; i < cards.length; i++) {
-      var myCategory = cards[i].getAttribute('data-category');
-      if (category === '전체' || myCategory.indexOf(category) > -1) {
-        cards[i].style.display = 'block';
-      } else {
-        cards[i].style.display = 'none';
-      }
-    }
+    nowCategory = category;
 
     // 누른 버튼만 색을 진하게 표시합니다
     var buttons = document.querySelectorAll('.categories button');
@@ -603,6 +634,37 @@
       buttons[j].classList.remove('on');
     }
     clickedButton.classList.add('on');
+
+    filterProducts();
+  }
+
+  // 검색어와 카테고리에 맞는 상품만 보여줍니다
+  function filterProducts() {
+    var word = document.getElementById('searchBox').value.trim();
+    var cards = document.querySelectorAll('.card');
+    var found = 0;
+
+    for (var i = 0; i < cards.length; i++) {
+      var name = cards[i].querySelector('h4').textContent;
+      var myCategory = cards[i].getAttribute('data-category');
+
+      var categoryOk = (nowCategory === '전체' || myCategory.indexOf(nowCategory) > -1);
+      var wordOk = (word === '' || name.indexOf(word) > -1);
+
+      if (categoryOk && wordOk) {
+        cards[i].style.display = 'block';
+        found = found + 1;
+      } else {
+        cards[i].style.display = 'none';
+      }
+    }
+
+    // 하나도 없으면 안내 문구를 보여줍니다
+    if (found === 0) {
+      document.getElementById('noResult').style.display = 'block';
+    } else {
+      document.getElementById('noResult').style.display = 'none';
+    }
   }
 
   // 하트를 누르면 찜하기가 켜지고, 다시 누르면 풀립니다
