@@ -9,6 +9,10 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap">
 
 <style>
+  /* 메뉴를 누르면 부드럽게 이동합니다 */
+  html {
+    scroll-behavior: smooth;
+  }
   /* 공통 스타일 */
   body {
     margin: 0;
@@ -349,7 +353,7 @@
 <body>
 
 <!-- 맨 위: 가게 이름과 소개 -->
-<header>
+<header id="home">
   <!-- 왼쪽 포도송이 장식 (그림) -->
   <svg class="grape" viewBox="0 0 120 170" fill="#6d3348">
     <path d="M60 82 V44" stroke="#6d3348" stroke-width="4" fill="none"/>
@@ -372,21 +376,21 @@
 
 <!-- 메뉴 4개 -->
 <nav>
-  <a href="#">홈</a>
-  <a href="#">전체상품</a>
-  <a href="#">이벤트</a>
-  <a href="#">고객센터</a>
+  <a href="#home">홈</a>
+  <a href="#products">전체상품</a>
+  <a href="#event">이벤트</a>
+  <a href="#service">고객센터</a>
 </nav>
 
 <!-- 큰 배너 -->
-<div class="banner">
+<div class="banner" id="event">
   <h2>오늘 수확한 제철 과일, 오늘 배송</h2>
   <p>신선함이 다른 프리미엄 과일 선물세트</p>
-  <button onclick="showAlert('지금 특별한 과일을 만나보세요!')">지금 구경하기</button>
+  <button onclick="goToProducts()">지금 구경하기</button>
 </div>
 
 <!-- 상품 목록 -->
-<h3 class="title">이번 주 신선한 과일</h3>
+<h3 class="title" id="products">이번 주 신선한 과일</h3>
 <!-- 검색창 -->
 <div class="search">
   <input type="text" id="searchBox" oninput="filterProducts()" placeholder="찾으시는 과일 이름을 적어보세요">
@@ -584,7 +588,7 @@
 </div>
 
 <!-- 이용 안내 3개 -->
-<div class="guide">
+<div class="guide" id="service">
   <h3>이용 안내</h3>
 
   <div class="guide-boxes">
@@ -674,6 +678,11 @@
     } else {
       document.getElementById('noResult').style.display = 'none';
     }
+  }
+
+  // 지금 구경하기를 누르면 상품 목록으로 이동합니다
+  function goToProducts() {
+    document.getElementById("products").scrollIntoView();
   }
 
   // 하트를 누르면 찜하기가 켜지고, 다시 누르면 풀립니다
