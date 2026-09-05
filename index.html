@@ -45,6 +45,17 @@
     color: #96637a;
   }
 
+  /* 찜한 개수 표시 */
+  header .wish {
+    display: inline-block;
+    margin: 14px 0 0 0;
+    padding: 6px 16px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #8c2f4c;
+  }
+
   /* 메뉴 */
   nav {
     background-color: #eab0c2;
@@ -145,6 +156,26 @@
     font-weight: bold;
     padding: 5px 12px;
     border-radius: 15px;
+  }
+
+  /* 찜하기 하트 */
+  .card .heart {
+    position: absolute;
+    top: 28px;
+    right: 23px;
+    width: 34px;
+    height: 34px;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    font-size: 18px;
+    line-height: 1;
+    color: #dba9bb;
+    cursor: pointer;
+  }
+  /* 찜한 상태 */
+  .card .heart.on {
+    color: #d6194a;
   }
 
   /* 상품 사진 */
@@ -302,6 +333,7 @@
   </svg>
   <h1>무지개 과일 백화점</h1>
   <p>일곱 빛깔 무지개처럼, 세상의 좋은 과일을 한자리에</p>
+  <p class="wish">♥ 찜한 상품 <span id="wishCount">0</span>개</p>
 </header>
 
 <!-- 메뉴 4개 -->
@@ -332,6 +364,7 @@
 <div class="products">
 
   <div class="card" data-category="수입">
+    <button class="heart" onclick="toggleHeart(this)">♡</button>
     <img class="photo" src="images/mango.jpg" alt="망고">
     <h4>프리미엄 애플망고</h4>
     <p class="old-price">45,000원</p>
@@ -340,6 +373,7 @@
   </div>
 
   <div class="card" data-category="국산 추천">
+    <button class="heart" onclick="toggleHeart(this)">♡</button>
     <span class="best">추천상품</span>
     <img class="photo" src="images/apple.jpg" alt="사과">
     <h4>아침 햇살 꿀사과</h4>
@@ -349,6 +383,7 @@
   </div>
 
   <div class="card" data-category="국산">
+    <button class="heart" onclick="toggleHeart(this)">♡</button>
     <img class="photo" src="images/melon.jpg" alt="멜론">
     <h4>고당도 머스크멜론</h4>
     <p class="old-price">48,000원</p>
@@ -357,6 +392,7 @@
   </div>
 
   <div class="card" data-category="국산 추천">
+    <button class="heart" onclick="toggleHeart(this)">♡</button>
     <span class="best">추천상품</span>
     <img class="photo" src="images/grape.jpg" alt="샤인머스캣">
     <h4>씨없는 샤인머스캣</h4>
@@ -366,6 +402,7 @@
   </div>
 
   <div class="card" data-category="국산">
+    <button class="heart" onclick="toggleHeart(this)">♡</button>
     <img class="photo" src="images/strawberry.jpg" alt="딸기">
     <h4>프리미엄 설향 딸기</h4>
     <p class="old-price">34,000원</p>
@@ -374,6 +411,7 @@
   </div>
 
   <div class="card" data-category="수입">
+    <button class="heart" onclick="toggleHeart(this)">♡</button>
     <img class="photo" src="images/blueberry.jpg" alt="블루베리">
     <h4>알알이 생블루베리</h4>
     <p class="old-price">35,000원</p>
@@ -382,6 +420,7 @@
   </div>
 
   <div class="card" data-category="국산">
+    <button class="heart" onclick="toggleHeart(this)">♡</button>
     <img class="photo" src="images/peach.jpg" alt="말랑 백도 복숭아">
     <h4>말랑 백도 복숭아</h4>
     <p class="old-price">38,000원</p>
@@ -390,6 +429,7 @@
   </div>
 
   <div class="card" data-category="국산">
+    <button class="heart" onclick="toggleHeart(this)">♡</button>
     <img class="photo" src="images/pear.jpg" alt="햇 신고배">
     <h4>햇 신고배</h4>
     <p class="old-price">42,000원</p>
@@ -398,6 +438,7 @@
   </div>
 
   <div class="card" data-category="수입">
+    <button class="heart" onclick="toggleHeart(this)">♡</button>
     <img class="photo" src="images/cherry.jpg" alt="미국산 킹 체리">
     <h4>미국산 킹 체리</h4>
     <p class="old-price">46,000원</p>
@@ -406,6 +447,7 @@
   </div>
 
   <div class="card" data-category="국산">
+    <button class="heart" onclick="toggleHeart(this)">♡</button>
     <img class="photo" src="images/persimmon.jpg" alt="아삭 단감">
     <h4>아삭 단감</h4>
     <p class="old-price">26,000원</p>
@@ -414,6 +456,7 @@
   </div>
 
   <div class="card" data-category="국산">
+    <button class="heart" onclick="toggleHeart(this)">♡</button>
     <img class="photo" src="images/watermelon.jpg" alt="당도선별 수박">
     <h4>당도선별 수박</h4>
     <p class="old-price">33,000원</p>
@@ -422,6 +465,7 @@
   </div>
 
   <div class="card" data-category="수입">
+    <button class="heart" onclick="toggleHeart(this)">♡</button>
     <img class="photo" src="images/pineapple.jpg" alt="골드 파인애플">
     <h4>골드 파인애플</h4>
     <p class="old-price">19,000원</p>
@@ -430,6 +474,7 @@
   </div>
 
   <div class="card" data-category="수입">
+    <button class="heart" onclick="toggleHeart(this)">♡</button>
     <img class="photo" src="images/kiwi.jpg" alt="뉴질랜드 골드키위">
     <h4>뉴질랜드 골드키위</h4>
     <p class="old-price">31,000원</p>
@@ -438,6 +483,7 @@
   </div>
 
   <div class="card" data-category="국산">
+    <button class="heart" onclick="toggleHeart(this)">♡</button>
     <img class="photo" src="images/plum.jpg" alt="새콤달콤 자두">
     <h4>새콤달콤 자두</h4>
     <p class="old-price">28,000원</p>
@@ -446,6 +492,7 @@
   </div>
 
   <div class="card" data-category="국산">
+    <button class="heart" onclick="toggleHeart(this)">♡</button>
     <img class="photo" src="images/fig.jpg" alt="생 무화과">
     <h4>생 무화과</h4>
     <p class="old-price">39,000원</p>
@@ -454,6 +501,7 @@
   </div>
 
   <div class="card" data-category="국산">
+    <button class="heart" onclick="toggleHeart(this)">♡</button>
     <img class="photo" src="images/mandarin.jpg" alt="제주 노지 감귤">
     <h4>제주 노지 감귤</h4>
     <p class="old-price">24,000원</p>
@@ -555,6 +603,23 @@
       buttons[j].classList.remove('on');
     }
     clickedButton.classList.add('on');
+  }
+
+  // 하트를 누르면 찜하기가 켜지고, 다시 누르면 풀립니다
+  function toggleHeart(button) {
+    button.classList.toggle('on');
+    if (button.classList.contains('on')) {
+      button.textContent = '♥';
+    } else {
+      button.textContent = '♡';
+    }
+    countHearts();
+  }
+
+  // 찜한 개수를 맨 위에 보여줍니다
+  function countHearts() {
+    var picked = document.querySelectorAll('.heart.on');
+    document.getElementById('wishCount').textContent = picked.length;
   }
 </script>
 
