@@ -1138,6 +1138,7 @@
     document.getElementById('cartList').innerHTML = html;
     document.getElementById('cartCount').textContent = howMany;
     drawSum(goods);
+    saveCart();
   }
 
   // 상품금액 / 배송비 / 총 결제금액을 적습니다
@@ -1719,6 +1720,43 @@
 
   // 페이지를 열면 상품부터 가져옵니다
   loadProducts();
+
+  // ----- 장바구니 보관 (새로고침해도 남아 있게) -----
+
+  // 장바구니를 이 브라우저에 저장해 둡니다
+  function saveCart() {
+    try {
+      localStorage.setItem('fruitShopCart', JSON.stringify(cart));
+    } catch (e) {
+      // 저장이 막혀 있는 브라우저면 그냥 넘어갑니다
+    }
+  }
+
+  // 저장해 둔 장바구니를 꺼내옵니다
+  function loadCart() {
+    var saved = null;
+    try {
+      saved = JSON.parse(localStorage.getItem('fruitShopCart'));
+    } catch (e) {
+      saved = null;
+    }
+
+    cart = [];
+    if (saved && saved.length) {
+      for (var i = 0; i < saved.length; i++) {
+        var item = saved[i];
+        // 모양이 맞는 것만 받아들입니다
+        if (item && item.name && item.price > 0 && item.count > 0) {
+          cart.push({ name: item.name, price: item.price, count: item.count });
+        }
+      }
+    }
+
+    drawCart();
+  }
+
+  // 페이지를 열면 저장해 둔 장바구니를 되살립니다
+  loadCart();
 </script>
 
 </body>
