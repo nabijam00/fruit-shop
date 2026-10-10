@@ -32,3 +32,29 @@ create policy orders_select_own
   for select
   to authenticated
   using (auth.uid() = user_id);
+
+-- ============================================================
+-- 5) 상품 표 (사이트의 과일 16가지)
+-- ============================================================
+create table if not exists public.products (
+  id          text primary key,              -- 사진 이름에서 딴 짧은 이름 (mango, apple ...)
+  name        text    not null,              -- 상품 이름
+  origin      text    not null,              -- 국산 / 수입
+  is_best     boolean not null default false,-- 추천상품 표시 여부
+  image       text    not null,              -- 사진 경로
+  old_price   integer not null,              -- 정가
+  price       integer not null,              -- 할인가
+  sort_no     integer not null default 0,    -- 화면에 보일 순서
+  on_sale     boolean not null default true, -- 판매 중인지
+  updated_at  timestamptz not null default now()
+);
+
+-- 6) 상품은 누구나 볼 수 있게, 고치는 것은 막습니다
+--    (가격 수정은 Supabase 대시보드 > Table Editor 에서 하세요)
+alter table public.products enable row level security;
+drop policy if exists products_read_all on public.products;
+create policy products_read_all
+  on public.products
+  for select
+  to anon, authenticated
+  using (true);
