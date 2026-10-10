@@ -1579,64 +1579,6 @@
     document.getElementById('cartBox').style.display = 'none';
   }
 
-  // 주문하기를 누르면 주문을 받습니다
-  function order() {
-    if (cart.length === 0) {
-      showToast('장바구니가 비어 있습니다.');
-      return;
-    }
-
-    // 주문 내용과 금액을 정리합니다
-    var goods = 0;
-    var items = [];
-    for (var i = 0; i < cart.length; i++) {
-      goods = goods + cart[i].price * cart[i].count;
-      items.push({ name: cart[i].name, price: cart[i].price, count: cart[i].count });
-    }
-
-    var ship = SHIP_FEE;
-    if (goods >= FREE_FROM) {
-      ship = 0;
-    }
-
-    // 데이터베이스 연결이 없으면 저장 없이 인사만 합니다
-    if (db === null) {
-      finishOrder(goods + ship);
-      return;
-    }
-
-    // 주문을 데이터베이스에 저장합니다
-    showToast('주문을 보내는 중입니다...');
-    var row = {
-      items: items,
-      goods_total: goods,
-      ship_fee: ship,
-      total: goods + ship
-    };
-
-    // 로그인한 상태면 누가 주문했는지도 같이 남깁니다
-    if (me !== null) {
-      row.user_id = me.id;
-    }
-
-    db.from('orders').insert(row).then(function (result) {
-      if (result.error) {
-        // 저장에 실패하면 장바구니를 비우지 않습니다
-        alert('주문을 보내지 못했습니다.\n(' + result.error.message + ')\n\n잠시 후 다시 눌러주세요.');
-        return;
-      }
-      finishOrder(goods + ship);
-    });
-  }
-
-  // 주문이 끝난 뒤 인사하고 장바구니를 비웁니다
-  function finishOrder(total) {
-    alert('주문해 주셔서 고맙습니다!\n총 결제금액 ' + addComma(total) + '원\n\n곧 연락드리겠습니다.');
-    cart = [];
-    drawCart();
-    closeCart();
-  }
-
   // 아래쪽에 알림을 잠깐 보여줍니다
   var toastTimer = null;
   function showToast(message) {
@@ -2460,7 +2402,50 @@
       return;
     }
 
-    sayOrder('적어주신 내용을 확인했습니다. 주문 저장은 다음 단계에서 연결합니다.', true);
+    saveOrder(name, document.getElementById('rcvPhone').value.trim(), addr, goods, ship);
+  }
+
+  // 주문을 Supabase 에 저장합니다
+  function saveOrder(name, phone, addr, goods, ship) {
+    if (db === null || me === null) {
+      sayOrder('주문을 보낼 수 없습니다. 다시 로그인해 주세요.', false);
+      return;
+    }
+
+    var items = [];
+    for (var i = 0; i < cart.length; i++) {
+      items.push({ name: cart[i].name, price: cart[i].price, count: cart[i].count });
+    }
+
+    sayOrder('주문을 보내는 중입니다...', true);
+
+    db.from('orders').insert({
+      user_id: me.id,
+      items: items,
+      goods_total: goods,
+      ship_fee: ship,
+      total: goods + ship,
+      receiver_name: name,
+      receiver_phone: phone,
+      receiver_addr: addr
+    }).then(function (result) {
+      if (result.error) {
+        // 저장에 실패하면 장바구니를 비우지 않습니다
+        sayOrder('주문을 보내지 못했습니다. (' + result.error.message + ') 잠시 후 다시 눌러주세요.', false);
+        return;
+      }
+      finishOrder(goods + ship);
+    });
+  }
+
+  // 주문이 끝난 뒤 인사하고 장바구니를 비웁니다
+  function finishOrder(total) {
+    cart = [];
+    drawCart();
+    closeOrder();
+    drawMyPage();
+
+    alert('주문해 주셔서 고맙습니다!\n총 결제금액 ' + addComma(total) + '원\n\n곧 연락드리겠습니다.');
   }
 
   // 빠뜨린 칸 중 첫 번째로 커서를 보냅니다

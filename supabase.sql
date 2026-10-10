@@ -13,6 +13,11 @@ create table if not exists public.orders (
   total       integer not null                  -- 총 결제금액
 );
 
+-- 주문서에서 받은 받는 사람 정보
+alter table public.orders add column if not exists receiver_name  text;
+alter table public.orders add column if not exists receiver_phone text;
+alter table public.orders add column if not exists receiver_addr  text;
+
 -- 2) 보안(RLS)을 켭니다. 켜 두지 않으면 누구나 전체 주문을 볼 수 있습니다.
 alter table public.orders enable row level security;
 
