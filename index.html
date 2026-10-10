@@ -624,6 +624,8 @@
     transform: translateX(-50%);
     width: 360px;
     max-width: 88%;
+    max-height: 92vh;
+    overflow-y: auto;
     background-color: #ffffff;
     border-radius: 14px;
     padding: 25px;
@@ -671,6 +673,47 @@
   }
   .login-box .msg.good {
     color: #2f7d5a;
+  }
+  /* 약관 동의 */
+  .agree {
+    border: 2px solid #f3dde4;
+    border-radius: 12px;
+    padding: 14px 15px 10px 15px;
+    margin: 4px 0 18px 0;
+  }
+  .agree label {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    margin: 0 0 10px 0;
+    font-size: 13px;
+    color: #7a5060;
+    line-height: 1.5;
+    cursor: pointer;
+  }
+  /* 전체 동의 줄 */
+  .agree label.all {
+    border-bottom: 1px solid #f3dde4;
+    padding-bottom: 11px;
+    font-size: 14px;
+    color: #6d3348;
+  }
+  .agree input {
+    width: auto;
+    margin: 2px 0 0 0;
+    padding: 0;
+    accent-color: #b85c7a;
+  }
+  .agree .must,
+  .agree .pick {
+    white-space: nowrap;
+  }
+  .agree .must {
+    color: #8c2f4c;
+    font-weight: bold;
+  }
+  .agree .pick {
+    color: #b08c9a;
   }
   /* 가운데 큰 버튼 (로그인 또는 회원가입) */
   .login-box .go {
@@ -1049,16 +1092,45 @@
 
   <p class="msg" id="loginMsg"></p>
 
-  <label for="emailBox">이메일</label>
+  <label for="emailBox" id="emailLabel">이메일</label>
   <input type="email" id="emailBox" placeholder="fruit@example.com">
 
   <label for="pwBox" id="pwLabel">비밀번호</label>
   <input type="password" id="pwBox" placeholder="비밀번호">
 
-  <!-- 회원가입일 때만 보입니다 -->
-  <div id="pw2Row" style="display: none;">
+  <!-- 회원가입일 때만 보이는 칸들 -->
+  <div id="joinOnly" style="display: none;">
     <label for="pw2Box">비밀번호 확인</label>
     <input type="password" id="pw2Box" placeholder="비밀번호를 한 번 더">
+
+    <label for="nameBox">이름</label>
+    <input type="text" id="nameBox" placeholder="홍길동">
+
+    <label for="phoneBox">휴대폰 번호</label>
+    <input type="tel" id="phoneBox" placeholder="010-1234-5678" oninput="tidyPhone(this)" maxlength="13">
+
+    <div class="agree">
+      <label class="all">
+        <input type="checkbox" id="agreeAll" onclick="checkAllAgree(this)">
+        <b>전체 동의</b>
+      </label>
+      <label>
+        <input type="checkbox" class="need" id="agree14" onclick="syncAgreeAll()">
+        <span class="must">[필수]</span> 만 14세 이상입니다
+      </label>
+      <label>
+        <input type="checkbox" class="need" id="agreeUse" onclick="syncAgreeAll()">
+        <span class="must">[필수]</span> 이용약관에 동의합니다
+      </label>
+      <label>
+        <input type="checkbox" class="need" id="agreePrivacy" onclick="syncAgreeAll()">
+        <span class="must">[필수]</span> 개인정보 수집 · 이용에 동의합니다
+      </label>
+      <label>
+        <input type="checkbox" id="agreeAd" onclick="syncAgreeAll()">
+        <span class="pick">[선택]</span> 할인 소식과 새 과일 소식을 받겠습니다
+      </label>
+    </div>
   </div>
 
   <button class="go" id="goBtn" onclick="doLoginBox()">로그인</button>
@@ -1416,10 +1488,11 @@
 
     if (mode === 'join') {
       document.getElementById('loginTitle').textContent = '회원가입';
-      document.getElementById('loginHint').innerHTML = '이메일과 비밀번호를 정해 적어주세요<br>가입하면 바로 쓰실 수 있습니다';
-      document.getElementById('pwLabel').textContent = '비밀번호 (6자 이상)';
-      document.getElementById('pw2Row').style.display = 'block';
-      document.getElementById('goBtn').textContent = '회원가입';
+      document.getElementById('loginHint').innerHTML = '아래 내용을 적어주시면 바로 가입됩니다';
+      document.getElementById('emailLabel').textContent = '이메일 (아이디로 쓰입니다)';
+      document.getElementById('pwLabel').textContent = '비밀번호 (8자 이상, 영문과 숫자를 섞어주세요)';
+      document.getElementById('joinOnly').style.display = 'block';
+      document.getElementById('goBtn').textContent = '동의하고 가입하기';
       document.getElementById('switchText').textContent = '이미 회원이신가요?';
       document.getElementById('switchLink').textContent = '로그인';
       return;
@@ -1427,11 +1500,54 @@
 
     document.getElementById('loginTitle').textContent = '로그인';
     document.getElementById('loginHint').innerHTML = '이메일과 비밀번호를 적어주세요';
+    document.getElementById('emailLabel').textContent = '이메일';
     document.getElementById('pwLabel').textContent = '비밀번호';
-    document.getElementById('pw2Row').style.display = 'none';
+    document.getElementById('joinOnly').style.display = 'none';
     document.getElementById('goBtn').textContent = '로그인';
     document.getElementById('switchText').textContent = '아직 회원이 아니신가요?';
     document.getElementById('switchLink').textContent = '회원가입';
+  }
+
+  // 휴대폰 번호에 - 를 자동으로 넣어 줍니다
+  function tidyPhone(box) {
+    var only = box.value.replace(/[^0-9]/g, '').substring(0, 11);
+    if (only.length > 7) {
+      box.value = only.substring(0, 3) + '-' + only.substring(3, 7) + '-' + only.substring(7);
+    } else if (only.length > 3) {
+      box.value = only.substring(0, 3) + '-' + only.substring(3);
+    } else {
+      box.value = only;
+    }
+  }
+
+  // 약관 칸 목록
+  function agreeBoxes() {
+    return [
+      document.getElementById('agree14'),
+      document.getElementById('agreeUse'),
+      document.getElementById('agreePrivacy'),
+      document.getElementById('agreeAd')
+    ];
+  }
+
+  // '전체 동의'를 누르면 아래 항목이 모두 따라갑니다
+  function checkAllAgree(allBox) {
+    var boxes = agreeBoxes();
+    for (var i = 0; i < boxes.length; i++) {
+      boxes[i].checked = allBox.checked;
+    }
+  }
+
+  // 항목을 하나씩 누르면 '전체 동의'를 맞춰 줍니다
+  function syncAgreeAll() {
+    var boxes = agreeBoxes();
+    var allOn = true;
+    for (var i = 0; i < boxes.length; i++) {
+      if (!boxes[i].checked) {
+        allOn = false;
+      }
+    }
+    document.getElementById('agreeAll').checked = allOn;
   }
 
   // 창을 화면에 띄웁니다
@@ -1476,20 +1592,61 @@
       sayLogin('회원 기능을 쓸 수 없습니다. 잠시 후 다시 열어주세요.', false);
       return null;
     }
-    if (email === '') {
-      sayLogin('이메일을 적어주세요.', false);
+    if (email.indexOf('@') < 1 || email.indexOf('.') < 0) {
+      sayLogin('이메일을 바르게 적어주세요.', false);
       return null;
     }
-    if (pw.length < 6) {
-      sayLogin('비밀번호는 6자 이상으로 적어주세요.', false);
+
+    // 로그인일 때는 여기까지만 확인합니다
+    if (loginMode !== 'join') {
+      if (pw === '') {
+        sayLogin('비밀번호를 적어주세요.', false);
+        return null;
+      }
+      return { email: email, pw: pw };
+    }
+
+    // 아래는 회원가입일 때만 확인합니다
+    if (pw.length < 8) {
+      sayLogin('비밀번호는 8자 이상으로 적어주세요.', false);
       return null;
     }
-    // 회원가입일 때는 비밀번호를 두 번 맞춰 봅니다
-    if (loginMode === 'join' && pw !== document.getElementById('pw2Box').value) {
+    if (!/[a-zA-Z]/.test(pw) || !/[0-9]/.test(pw)) {
+      sayLogin('비밀번호에 영문과 숫자를 함께 넣어주세요.', false);
+      return null;
+    }
+    if (pw !== document.getElementById('pw2Box').value) {
       sayLogin('두 번 적은 비밀번호가 서로 다릅니다.', false);
       return null;
     }
-    return { email: email, pw: pw };
+
+    var name = document.getElementById('nameBox').value.trim();
+    if (name === '') {
+      sayLogin('이름을 적어주세요.', false);
+      return null;
+    }
+
+    var phone = document.getElementById('phoneBox').value.replace(/[^0-9]/g, '');
+    if (phone.length < 10 || phone.substring(0, 2) !== '01') {
+      sayLogin('휴대폰 번호를 바르게 적어주세요. (예: 010-1234-5678)', false);
+      return null;
+    }
+
+    // 필수 약관 세 가지를 확인합니다
+    if (!document.getElementById('agree14').checked ||
+        !document.getElementById('agreeUse').checked ||
+        !document.getElementById('agreePrivacy').checked) {
+      sayLogin('[필수] 항목에 모두 동의해 주셔야 가입할 수 있습니다.', false);
+      return null;
+    }
+
+    return {
+      email: email,
+      pw: pw,
+      name: name,
+      phone: document.getElementById('phoneBox').value,
+      adOk: document.getElementById('agreeAd').checked
+    };
   }
 
   // 회원가입
@@ -1500,7 +1657,17 @@
     }
 
     sayLogin('가입하는 중입니다...', true);
-    db.auth.signUp({ email: form.email, password: form.pw }).then(function (result) {
+    db.auth.signUp({
+      email: form.email,
+      password: form.pw,
+      options: {
+        data: {
+          name: form.name,
+          phone: form.phone,
+          ad_ok: form.adOk
+        }
+      }
+    }).then(function (result) {
       if (result.error) {
         sayLogin('가입하지 못했습니다. ' + result.error.message, false);
         return;
@@ -1510,7 +1677,7 @@
         sayLogin('가입 신청이 되었습니다. 메일함에서 확인 메일을 열어 인증한 뒤 로그인해 주세요.', true);
         return;
       }
-      afterLogin(result.data.user, '가입을 환영합니다!');
+      afterLogin(result.data.user, form.name + '님, 가입을 환영합니다!');
     });
   }
 
