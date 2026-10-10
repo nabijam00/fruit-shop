@@ -832,7 +832,7 @@
   <p>은하수처럼 빛나는, 가장 좋은 과일만 골라 드립니다</p>
   <p class="wish">♥ 찜한 상품 <span id="wishCount">0</span>개</p>
   <button class="cart-btn" onclick="openCart()">장바구니 <span id="cartCount">0</span>개</button>
-  <span class="who off" id="who">로그인하지 않음</span>
+  <span class="who off" id="who">로그인해 주세요</span>
   <button class="user-btn" id="loginBtn" onclick="openLogin()">로그인</button>
   <button class="user-btn" id="joinBtn" onclick="openJoin()">회원가입</button>
 </header>
@@ -1749,7 +1749,7 @@
     // 로그인하지 않은 상태: 회색 점 + 로그인 / 회원가입 버튼
     if (me === null) {
       whoBox.className = 'who off';
-      whoBox.textContent = '로그인하지 않음';
+      whoBox.textContent = '로그인해 주세요';
       loginBtn.textContent = '로그인';
       loginBtn.setAttribute('onclick', 'openLogin()');
       joinBtn.style.display = 'inline-block';
@@ -1758,7 +1758,7 @@
 
     // 로그인한 상태: 초록 점 + 이름 + 로그아웃 버튼
     whoBox.className = 'who on';
-    whoBox.textContent = myName() + '님 로그인 중';
+    whoBox.textContent = myName() + '님, 어서 오세요';
     loginBtn.textContent = '로그아웃';
     loginBtn.setAttribute('onclick', 'logout()');
     joinBtn.style.display = 'none';
