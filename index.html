@@ -371,6 +371,89 @@
     line-height: 1.9;
   }
 
+  /* 나의 쇼핑목록 */
+  .mypage {
+    background-color: #fbe0e8;
+    padding: 55px 20px;
+  }
+  .mypage h3 {
+    text-align: center;
+    font-size: 24px;
+    color: #6d3348;
+    margin: 0 0 10px 0;
+  }
+  .mypage .who-line {
+    text-align: center;
+    font-size: 14px;
+    color: #96637a;
+    margin: 0 0 30px 0;
+  }
+  /* 두 칸 (찜한 상품 / 최근 주문) */
+  .my-boxes {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .my-box {
+    background-color: #ffffff;
+    border-radius: 12px;
+    width: 330px;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 22px 22px 18px 22px;
+  }
+  .my-box h4 {
+    font-size: 17px;
+    color: #8c2f4c;
+    margin: 0 0 14px 0;
+    padding-bottom: 11px;
+    border-bottom: 2px solid #f3dde4;
+  }
+  /* 목록 한 줄 */
+  .my-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 14px;
+    color: #7a5060;
+    padding: 8px 0;
+    line-height: 1.5;
+  }
+  .my-line b {
+    color: #b85c7a;
+    white-space: nowrap;
+  }
+  .my-line .date {
+    color: #a4818f;
+    font-size: 13px;
+  }
+  /* 비었을 때 */
+  .my-none {
+    text-align: center;
+    color: #a4818f;
+    font-size: 14px;
+    line-height: 1.8;
+    padding: 24px 0;
+  }
+  /* 더 보기 버튼 */
+  .my-box .more {
+    display: block;
+    width: 100%;
+    margin-top: 14px;
+    background-color: #ffffff;
+    color: #8c2f4c;
+    border: 2px solid #eab0c2;
+    padding: 10px 0;
+    border-radius: 20px;
+    font-family: "굴림", Gulim, sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .my-box .more:hover {
+    background-color: #fdf2f6;
+  }
+
   /* 맨 아래 (푸터) */
   footer {
     background-color: #6d3348;
@@ -929,6 +1012,111 @@
     color: #6d3348;
   }
 
+  /* 주문내역 창 */
+  .orders-box {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 460px;
+    max-width: 90%;
+    max-height: 92vh;
+    overflow-y: auto;
+    background-color: #ffffff;
+    border-radius: 14px;
+    padding: 25px;
+    box-sizing: border-box;
+    z-index: 11;
+  }
+  .orders-box h3 {
+    margin: 0 0 18px 0;
+    font-size: 21px;
+    color: #6d3348;
+    text-align: center;
+  }
+  /* 주문 한 건 */
+  .order-card {
+    border: 2px solid #f3dde4;
+    border-radius: 12px;
+    padding: 15px 16px 10px 16px;
+    margin: 0 0 14px 0;
+  }
+  .order-card .when {
+    font-size: 13px;
+    color: #8c2f4c;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    padding-bottom: 9px;
+    border-bottom: 1px solid #f3dde4;
+  }
+  .order-card p {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 0 0 8px 0;
+    font-size: 13px;
+    color: #7a5060;
+  }
+  .order-card p b {
+    color: #4a3038;
+    white-space: nowrap;
+  }
+  /* 총액 줄 */
+  .order-card p.sum {
+    border-top: 1px solid #f3dde4;
+    padding-top: 9px;
+    margin-top: 10px;
+    font-size: 15px;
+    color: #6d3348;
+  }
+  .order-card p.sum b {
+    color: #b85c7a;
+    font-size: 16px;
+  }
+  /* 주문이 없을 때 */
+  .orders-empty {
+    text-align: center;
+    color: #96637a;
+    font-size: 15px;
+    line-height: 1.8;
+    padding: 36px 0;
+  }
+  .orders-box .close {
+    display: block;
+    width: 100%;
+    background-color: #b85c7a;
+    color: #ffffff;
+    border: none;
+    padding: 13px 0;
+    border-radius: 20px;
+    font-family: "굴림", Gulim, sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  .orders-box .close:hover {
+    background-color: #a04a68;
+  }
+  .orders-box .x {
+    position: absolute;
+    top: 17px;
+    right: 17px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    color: #b08c9a;
+    font-size: 17px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .orders-box .x:hover {
+    background-color: #fbe0e8;
+    color: #6d3348;
+  }
+
   /* 담았을 때 아래쪽에 잠깐 뜨는 알림 */
   .toast {
     position: fixed;
@@ -988,6 +1176,7 @@
   <a href="#products">전체상품</a>
   <a href="#event">이벤트</a>
   <a href="#service">고객센터</a>
+  <a href="#" onclick="openOrders(); return false;">주문내역</a>
 </nav>
 
 <!-- 큰 배너 -->
@@ -1080,6 +1269,25 @@
         <li>5만원 이상 3개월 무이자 할부</li>
         <li>현금영수증 · 세금계산서 발행</li>
       </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 나의 쇼핑목록 -->
+<div class="mypage" id="mypage">
+  <h3>나의 쇼핑목록</h3>
+  <p class="who-line" id="myWhoLine">로그인하시면 찜한 상품과 주문내역을 함께 보실 수 있습니다</p>
+
+  <div class="my-boxes">
+    <div class="my-box">
+      <h4>♥ 찜한 상품</h4>
+      <div id="myWishList"></div>
+    </div>
+
+    <div class="my-box">
+      <h4>최근 주문</h4>
+      <div id="myOrderList"></div>
+      <button class="more" onclick="openOrders()">주문내역 확인하기</button>
     </div>
   </div>
 </div>
@@ -1186,6 +1394,15 @@
     <button class="back" onclick="backToCart()">장바구니로</button>
     <button class="pay" onclick="submitOrder()">주문 완료하기</button>
   </div>
+</div>
+
+
+<!-- 주문내역 창 -->
+<div class="orders-box" id="ordersBox">
+  <button class="x" onclick="closeOrders()" title="닫기">✕</button>
+  <h3>주문내역</h3>
+  <div id="ordersList"></div>
+  <button class="close" onclick="closeOrders()">닫기</button>
 </div>
 
 <!-- 담았을 때 잠깐 뜨는 알림 -->
@@ -1311,6 +1528,7 @@
     // 담은 것이 없으면 금액도 보여주지 않습니다
     if (cart.length === 0) {
       box.innerHTML = '';
+      document.getElementById('rcvPhone').focus();
       return;
     }
 
@@ -1520,6 +1738,9 @@
     }
 
     document.getElementById('wishCount').textContent = wishes.length;
+
+    // 아래 '나의 쇼핑목록'의 찜 목록도 맞춥니다
+    drawMyWishes();
   }
 
   // 찜 목록을 이 브라우저에 저장해 둡니다
@@ -1855,6 +2076,7 @@
       paintHearts();
 
       drawWho();
+      drawMyPage();
       showToast('로그아웃했습니다.');
     });
   }
@@ -1867,6 +2089,7 @@
     drawWho();
     loadCartFromServer();
     loadWishesFromServer();
+    drawMyPage();
     closeLogin();
     showToast(message);
   }
@@ -1912,6 +2135,7 @@
       drawWho();
       loadCartFromServer();
       loadWishesFromServer();
+      drawMyPage();
     });
   }
 
@@ -1920,6 +2144,7 @@
     closeCart();
     closeLogin();
     closeOrder();
+    closeOrders();
   }
 
   // ----- 상품 목록 (Supabase 에서 가져옵니다) -----
@@ -1949,6 +2174,7 @@
   // 가져온 상품으로 카드를 만들어 화면에 그립니다
   function drawProducts(rows) {
     var list = document.getElementById('productList');
+    allProducts = rows;
     var html = '';
 
     for (var i = 0; i < rows.length; i++) {
@@ -1985,6 +2211,9 @@
 
     // 찜해 둔 상품에 하트를 채웁니다
     paintHearts();
+
+    // 아래 '나의 쇼핑목록'도 다시 그립니다
+    drawMyPage();
 
     // 검색어나 분류가 이미 골라져 있으면 그대로 적용합니다
     filterProducts();
@@ -2195,6 +2424,7 @@
     if (missing.length > 0) {
       sayOrder(missing.join(', ') + '을(를) 적어주세요.', false);
       markEmpty();
+      focusEmpty();
       return;
     }
 
@@ -2202,11 +2432,28 @@
     if (phone.length < 10 || phone.substring(0, 2) !== '01') {
       sayOrder('연락처를 바르게 적어주세요. (예: 010-1234-5678)', false);
       markEmpty();
+      document.getElementById('rcvPhone').focus();
       return;
     }
 
     markEmpty();
     sayOrder('적어주신 내용을 확인했습니다. 주문 저장은 다음 단계에서 연결합니다.', true);
+  }
+
+  // 빠뜨린 칸 중 첫 번째로 커서를 보냅니다
+  function focusEmpty() {
+    var boxes = [
+      document.getElementById('rcvName'),
+      document.getElementById('rcvPhone'),
+      document.getElementById('rcvAddr')
+    ];
+
+    for (var i = 0; i < boxes.length; i++) {
+      if (boxes[i].value.trim() === '') {
+        boxes[i].focus();
+        return;
+      }
+    }
   }
 
   // 비어 있는 칸은 테두리를 붉게 표시해 줍니다
@@ -2224,6 +2471,189 @@
         boxes[i].classList.remove('empty');
       }
     }
+  }
+
+  // ----- 주문내역 -----
+
+  // 주문내역 창을 엽니다 (로그인한 회원만)
+  function openOrders() {
+    if (me === null) {
+      showToast('주문내역을 보시려면 먼저 로그인해 주세요.');
+      openLogin();
+      return;
+    }
+
+    document.getElementById('ordersList').innerHTML =
+      '<p class="orders-empty">주문내역을 불러오는 중입니다...</p>';
+    document.getElementById('cartBack').style.display = 'block';
+    document.getElementById('ordersBox').style.display = 'block';
+
+    loadOrders();
+  }
+
+  // 주문내역 창을 닫습니다
+  function closeOrders() {
+    document.getElementById('cartBack').style.display = 'none';
+    document.getElementById('ordersBox').style.display = 'none';
+  }
+
+  // 내가 한 주문을 가져옵니다
+  function loadOrders() {
+    if (db === null || me === null) {
+      return;
+    }
+
+    db.from('orders')
+      .select('id, created_at, items, goods_total, ship_fee, total')
+      .eq('user_id', me.id)
+      .order('created_at', { ascending: false })
+      .then(function (result) {
+        if (result.error) {
+          document.getElementById('ordersList').innerHTML =
+            '<p class="orders-empty">주문내역을 불러오지 못했습니다.<br>잠시 후 다시 열어주세요.</p>';
+          return;
+        }
+        drawOrders(result.data);
+      });
+  }
+
+  // 가져온 주문을 화면에 그립니다
+  function drawOrders(rows) {
+    var html = '';
+
+    for (var i = 0; i < rows.length; i++) {
+      var one = rows[i];
+      var items = one.items || [];
+
+      var lines = '';
+      for (var j = 0; j < items.length; j++) {
+        lines = lines +
+          '<p><span>' + items[j].name + ' ' + items[j].count + '개</span>' +
+          '<b>' + addComma(items[j].price * items[j].count) + '원</b></p>';
+      }
+
+      var shipText = addComma(one.ship_fee) + '원';
+      if (one.ship_fee === 0) {
+        shipText = '무료';
+      }
+
+      html = html +
+        '<div class="order-card">' +
+          '<p class="when">' + prettyDate(one.created_at) + ' 주문</p>' +
+          lines +
+          '<p><span>배송비</span><b>' + shipText + '</b></p>' +
+          '<p class="sum"><span>결제금액</span><b>' + addComma(one.total) + '원</b></p>' +
+        '</div>';
+    }
+
+    if (rows.length === 0) {
+      html = '<p class="orders-empty">아직 주문하신 내역이 없습니다.</p>';
+    }
+
+    document.getElementById('ordersList').innerHTML = html;
+  }
+
+  // 2026-10-10T05:43:50Z -> 2026년 10월 10일 14:43
+  function prettyDate(text) {
+    var when = new Date(text);
+    if (isNaN(when.getTime())) {
+      return text;
+    }
+
+    var hour = when.getHours();
+    var minute = when.getMinutes();
+    if (minute < 10) {
+      minute = '0' + minute;
+    }
+
+    return when.getFullYear() + '년 ' + (when.getMonth() + 1) + '월 ' + when.getDate() + '일 ' +
+           hour + ':' + minute;
+  }
+
+  // ----- 나의 쇼핑목록 (페이지 아래) -----
+
+  // 가져온 상품을 기억해 둡니다 (찜한 상품 이름을 찾는 데 씁니다)
+  var allProducts = [];
+
+  // 나의 쇼핑목록을 다시 그립니다
+  function drawMyPage() {
+    drawMyWishes();
+
+    if (me === null) {
+      document.getElementById('myWhoLine').textContent =
+        '로그인하시면 찜한 상품과 주문내역을 함께 보실 수 있습니다';
+      document.getElementById('myOrderList').innerHTML =
+        '<p class="my-none">로그인하시면 주문내역이 보입니다</p>';
+      return;
+    }
+
+    document.getElementById('myWhoLine').textContent = myName() + '님의 쇼핑목록입니다';
+    loadMyOrders();
+  }
+
+  // 찜한 상품을 적습니다
+  function drawMyWishes() {
+    var html = '';
+
+    for (var i = 0; i < allProducts.length; i++) {
+      if (wishes.indexOf(allProducts[i].id) > -1) {
+        html = html +
+          '<div class="my-line"><span>' + allProducts[i].name + '</span>' +
+          '<b>' + addComma(allProducts[i].price) + '원</b></div>';
+      }
+    }
+
+    if (html === '') {
+      html = '<p class="my-none">아직 찜한 상품이 없습니다<br>상품의 하트를 눌러보세요</p>';
+    }
+
+    document.getElementById('myWishList').innerHTML = html;
+  }
+
+  // 최근 주문 3건을 가져와 적습니다
+  function loadMyOrders() {
+    if (db === null || me === null) {
+      return;
+    }
+
+    db.from('orders')
+      .select('created_at, items, total')
+      .eq('user_id', me.id)
+      .order('created_at', { ascending: false })
+      .limit(3)
+      .then(function (result) {
+        if (result.error) {
+          document.getElementById('myOrderList').innerHTML =
+            '<p class="my-none">주문내역을 불러오지 못했습니다</p>';
+          return;
+        }
+
+        var rows = result.data;
+        var html = '';
+
+        for (var i = 0; i < rows.length; i++) {
+          var items = rows[i].items || [];
+          var title = '주문';
+          if (items.length > 0) {
+            title = items[0].name;
+            if (items.length > 1) {
+              title = title + ' 외 ' + (items.length - 1) + '건';
+            }
+          }
+
+          html = html +
+            '<div class="my-line">' +
+              '<span>' + title + '<br><span class="date">' + prettyDate(rows[i].created_at) + '</span></span>' +
+              '<b>' + addComma(rows[i].total) + '원</b>' +
+            '</div>';
+        }
+
+        if (rows.length === 0) {
+          html = '<p class="my-none">아직 주문하신 내역이 없습니다</p>';
+        }
+
+        document.getElementById('myOrderList').innerHTML = html;
+      });
   }
 </script>
 
