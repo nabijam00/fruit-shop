@@ -793,6 +793,136 @@
     background-color: #fbe0e8;
     color: #6d3348;
   }
+  /* 주문서 창 */
+  .order-box {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 430px;
+    max-width: 88%;
+    max-height: 92vh;
+    overflow-y: auto;
+    background-color: #ffffff;
+    border-radius: 14px;
+    padding: 25px;
+    box-sizing: border-box;
+    z-index: 11;
+  }
+  .order-box h3 {
+    margin: 0 0 6px 0;
+    font-size: 21px;
+    color: #6d3348;
+    text-align: center;
+  }
+  .order-box .hint {
+    margin: 0 0 18px 0;
+    font-size: 13px;
+    color: #96637a;
+    text-align: center;
+  }
+  /* 받는 분 적는 칸 */
+  .order-box label {
+    display: block;
+    font-size: 13px;
+    color: #8c2f4c;
+    margin: 0 0 6px 2px;
+  }
+  .order-box input,
+  .order-box textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 15px;
+    margin: 0 0 14px 0;
+    border: 2px solid #eab0c2;
+    border-radius: 16px;
+    font-family: "굴림", Gulim, sans-serif;
+    font-size: 14px;
+    color: #4a3038;
+    resize: none;
+  }
+  /* 안내 문구 */
+  .order-box .msg {
+    display: none;
+    font-size: 13px;
+    line-height: 1.6;
+    text-align: center;
+    margin: 0 0 14px 0;
+    color: #d13a5e;
+  }
+  .order-box .msg.good {
+    color: #2f7d5a;
+  }
+  /* 주문 내역 요약 */
+  .order-list {
+    border: 2px solid #f3dde4;
+    border-radius: 12px;
+    padding: 14px 15px 6px 15px;
+    margin: 4px 0 16px 0;
+  }
+  .order-list p {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 0 0 9px 0;
+    font-size: 13px;
+    color: #7a5060;
+  }
+  .order-list p b {
+    color: #4a3038;
+    white-space: nowrap;
+  }
+  /* 주문서 아래 버튼 두 개 */
+  .order-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  .order-buttons button {
+    flex: 1;
+    padding: 13px 0;
+    border-radius: 20px;
+    font-family: "굴림", Gulim, sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  .order-buttons .back {
+    background-color: #ffffff;
+    color: #8c2f4c;
+    border: 2px solid #eab0c2;
+  }
+  .order-buttons .back:hover {
+    background-color: #fdf2f6;
+  }
+  .order-buttons .pay {
+    background-color: #b85c7a;
+    color: #ffffff;
+    border: none;
+  }
+  .order-buttons .pay:hover {
+    background-color: #a04a68;
+  }
+  /* 오른쪽 위 닫기(X) 버튼 */
+  .order-box .x {
+    position: absolute;
+    top: 17px;
+    right: 17px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    color: #b08c9a;
+    font-size: 17px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .order-box .x:hover {
+    background-color: #fbe0e8;
+    color: #6d3348;
+  }
+
   /* 담았을 때 아래쪽에 잠깐 뜨는 알림 */
   .toast {
     position: fixed;
@@ -964,7 +1094,7 @@
   <div class="cart-sum" id="cartSum"></div>
   <div class="cart-buttons">
     <button class="keep" onclick="closeCart()">계속 쇼핑하기</button>
-    <button class="order" onclick="order()">주문하기</button>
+    <button class="order" onclick="goToOrderForm()">주문하기</button>
   </div>
 </div>
 
@@ -1023,6 +1153,33 @@
     <span id="switchText">아직 회원이 아니신가요?</span>
     <a href="#" id="switchLink" onclick="switchMode(); return false;">회원가입</a>
   </p>
+</div>
+
+
+<!-- 주문서 창 -->
+<div class="order-box" id="orderBox">
+  <button class="x" onclick="closeOrder()" title="닫기">✕</button>
+  <h3>주문서</h3>
+  <p class="hint">받으실 분의 정보를 적어주세요</p>
+
+  <p class="msg" id="orderMsg"></p>
+
+  <!-- 무엇을 주문하는지 -->
+  <div class="order-list" id="orderList"></div>
+
+  <label for="rcvName">받는 사람 이름</label>
+  <input type="text" id="rcvName" placeholder="홍길동">
+
+  <label for="rcvPhone">연락처</label>
+  <input type="tel" id="rcvPhone" placeholder="010-1234-5678" oninput="tidyPhone(this)" maxlength="13">
+
+  <label for="rcvAddr">주소</label>
+  <textarea id="rcvAddr" rows="3" placeholder="예) 서울시 종로구 과일로 12, 은하수아파트 101동 1004호"></textarea>
+
+  <div class="order-buttons">
+    <button class="back" onclick="backToCart()">장바구니로</button>
+    <button class="pay" onclick="submitOrder()">주문 완료하기</button>
+  </div>
 </div>
 
 <!-- 담았을 때 잠깐 뜨는 알림 -->
@@ -1756,6 +1913,7 @@
   function closeAll() {
     closeCart();
     closeLogin();
+    closeOrder();
   }
 
   // ----- 상품 목록 (Supabase 에서 가져옵니다) -----
@@ -1913,6 +2071,122 @@
 
       drawCart();
     });
+  }
+
+  // ----- 주문서 -----
+
+  // 장바구니에서 '주문하기'를 누르면 주문서로 넘어갑니다
+  function goToOrderForm() {
+    // 로그인하지 않았으면 주문서로 갈 수 없습니다
+    if (me === null) {
+      showToast('주문하시려면 먼저 로그인해 주세요.');
+      closeCart();
+      openLogin();
+      return;
+    }
+
+    // 장바구니가 비어 있어도 주문서로 갈 수 없습니다
+    if (cart.length === 0) {
+      showToast('장바구니가 비어 있습니다.');
+      return;
+    }
+
+    closeCart();
+    openOrder();
+  }
+
+  // 주문서를 엽니다
+  function openOrder() {
+    document.getElementById('orderMsg').style.display = 'none';
+
+    // 가입할 때 적은 이름과 연락처를 미리 채워 둡니다
+    if (document.getElementById('rcvName').value === '') {
+      document.getElementById('rcvName').value = myName();
+    }
+    if (document.getElementById('rcvPhone').value === '' &&
+        me.user_metadata && me.user_metadata.phone) {
+      document.getElementById('rcvPhone').value = me.user_metadata.phone;
+    }
+
+    drawOrderList();
+    document.getElementById('cartBack').style.display = 'block';
+    document.getElementById('orderBox').style.display = 'block';
+  }
+
+  // 주문서를 닫습니다
+  function closeOrder() {
+    document.getElementById('cartBack').style.display = 'none';
+    document.getElementById('orderBox').style.display = 'none';
+  }
+
+  // 장바구니로 돌아갑니다
+  function backToCart() {
+    closeOrder();
+    openCart();
+  }
+
+  // 무엇을 얼마에 주문하는지 보여줍니다
+  function drawOrderList() {
+    var goods = 0;
+    var html = '';
+
+    for (var i = 0; i < cart.length; i++) {
+      goods = goods + cart[i].price * cart[i].count;
+      html = html +
+        '<p><span>' + cart[i].name + ' ' + cart[i].count + '개</span>' +
+        '<b>' + addComma(cart[i].price * cart[i].count) + '원</b></p>';
+    }
+
+    var ship = SHIP_FEE;
+    if (goods >= FREE_FROM) {
+      ship = 0;
+    }
+
+    var shipText = addComma(ship) + '원';
+    if (ship === 0) {
+      shipText = '무료';
+    }
+
+    html = html +
+      '<p><span>배송비</span><b>' + shipText + '</b></p>' +
+      '<p><span>총 결제금액</span><b>' + addComma(goods + ship) + '원</b></p>';
+
+    document.getElementById('orderList').innerHTML = html;
+  }
+
+  // 주문서 안에 안내 문구를 보여줍니다
+  function sayOrder(message, isGood) {
+    var box = document.getElementById('orderMsg');
+    box.textContent = message;
+    box.style.display = 'block';
+    if (isGood) {
+      box.classList.add('good');
+    } else {
+      box.classList.remove('good');
+    }
+  }
+
+  // '주문 완료하기'를 누르면 적은 내용을 확인합니다
+  // (주문을 저장하는 것은 다음 단계에서 연결할 예정입니다)
+  function submitOrder() {
+    var name = document.getElementById('rcvName').value.trim();
+    var phone = document.getElementById('rcvPhone').value.replace(/[^0-9]/g, '');
+    var addr = document.getElementById('rcvAddr').value.trim();
+
+    if (name === '') {
+      sayOrder('받는 사람 이름을 적어주세요.', false);
+      return;
+    }
+    if (phone.length < 10 || phone.substring(0, 2) !== '01') {
+      sayOrder('연락처를 바르게 적어주세요. (예: 010-1234-5678)', false);
+      return;
+    }
+    if (addr.length < 5) {
+      sayOrder('주소를 적어주세요.', false);
+      return;
+    }
+
+    sayOrder('적어주신 내용을 확인했습니다. 주문 저장은 다음 단계에서 연결합니다.', true);
   }
 </script>
 
