@@ -158,6 +158,15 @@
     font-family: "굴림", Gulim, sans-serif;
     color: #4a3038;
   }
+  /* 상품을 불러오는 중 · 오류 안내 */
+  .loading {
+    width: 100%;
+    text-align: center;
+    color: #96637a;
+    font-size: 15px;
+    line-height: 1.8;
+    padding: 50px 20px;
+  }
   /* 검색 결과가 없을 때 안내 문구 */
   .no-result {
     display: none;
@@ -867,154 +876,9 @@
   <button onclick="showCategory('수입', this)">수입과일</button>
 </div>
 
-<div class="products">
-
-  <div class="card" data-category="수입">
-    <button class="heart" onclick="toggleHeart(this)">♡</button>
-    <img class="photo" src="images/mango.jpg" alt="망고">
-    <h4>프리미엄 애플망고</h4>
-    <p class="old-price">45,000원</p>
-    <p class="price"><span class="sale">10%</span>40,500원</p>
-    <button onclick="addToCart(this)">장바구니에 담기</button>
-  </div>
-
-  <div class="card" data-category="국산 추천">
-    <button class="heart" onclick="toggleHeart(this)">♡</button>
-    <span class="best">추천상품</span>
-    <img class="photo" src="images/apple.jpg" alt="사과">
-    <h4>아침 햇살 꿀사과</h4>
-    <p class="old-price">32,000원</p>
-    <p class="price"><span class="sale">10%</span>28,800원</p>
-    <button onclick="addToCart(this)">장바구니에 담기</button>
-  </div>
-
-  <div class="card" data-category="국산">
-    <button class="heart" onclick="toggleHeart(this)">♡</button>
-    <img class="photo" src="images/melon.jpg" alt="멜론">
-    <h4>고당도 머스크멜론</h4>
-    <p class="old-price">48,000원</p>
-    <p class="price"><span class="sale">10%</span>43,200원</p>
-    <button onclick="addToCart(this)">장바구니에 담기</button>
-  </div>
-
-  <div class="card" data-category="국산 추천">
-    <button class="heart" onclick="toggleHeart(this)">♡</button>
-    <span class="best">추천상품</span>
-    <img class="photo" src="images/grape.jpg" alt="샤인머스캣">
-    <h4>씨없는 샤인머스캣</h4>
-    <p class="old-price">52,000원</p>
-    <p class="price"><span class="sale">10%</span>46,800원</p>
-    <button onclick="addToCart(this)">장바구니에 담기</button>
-  </div>
-
-  <div class="card" data-category="국산">
-    <button class="heart" onclick="toggleHeart(this)">♡</button>
-    <img class="photo" src="images/strawberry.jpg" alt="딸기">
-    <h4>프리미엄 설향 딸기</h4>
-    <p class="old-price">34,000원</p>
-    <p class="price"><span class="sale">10%</span>30,600원</p>
-    <button onclick="addToCart(this)">장바구니에 담기</button>
-  </div>
-
-  <div class="card" data-category="수입">
-    <button class="heart" onclick="toggleHeart(this)">♡</button>
-    <img class="photo" src="images/blueberry.jpg" alt="블루베리">
-    <h4>알알이 생블루베리</h4>
-    <p class="old-price">35,000원</p>
-    <p class="price"><span class="sale">10%</span>31,500원</p>
-    <button onclick="addToCart(this)">장바구니에 담기</button>
-  </div>
-
-  <div class="card" data-category="국산">
-    <button class="heart" onclick="toggleHeart(this)">♡</button>
-    <img class="photo" src="images/peach.jpg" alt="말랑 백도 복숭아">
-    <h4>말랑 백도 복숭아</h4>
-    <p class="old-price">38,000원</p>
-    <p class="price"><span class="sale">10%</span>34,200원</p>
-    <button onclick="addToCart(this)">장바구니에 담기</button>
-  </div>
-
-  <div class="card" data-category="국산">
-    <button class="heart" onclick="toggleHeart(this)">♡</button>
-    <img class="photo" src="images/pear.jpg" alt="햇 신고배">
-    <h4>햇 신고배</h4>
-    <p class="old-price">42,000원</p>
-    <p class="price"><span class="sale">10%</span>37,800원</p>
-    <button onclick="addToCart(this)">장바구니에 담기</button>
-  </div>
-
-  <div class="card" data-category="수입">
-    <button class="heart" onclick="toggleHeart(this)">♡</button>
-    <img class="photo" src="images/cherry.jpg" alt="미국산 킹 체리">
-    <h4>미국산 킹 체리</h4>
-    <p class="old-price">46,000원</p>
-    <p class="price"><span class="sale">10%</span>41,400원</p>
-    <button onclick="addToCart(this)">장바구니에 담기</button>
-  </div>
-
-  <div class="card" data-category="국산">
-    <button class="heart" onclick="toggleHeart(this)">♡</button>
-    <img class="photo" src="images/persimmon.jpg" alt="아삭 단감">
-    <h4>아삭 단감</h4>
-    <p class="old-price">26,000원</p>
-    <p class="price"><span class="sale">10%</span>23,400원</p>
-    <button onclick="addToCart(this)">장바구니에 담기</button>
-  </div>
-
-  <div class="card" data-category="국산">
-    <button class="heart" onclick="toggleHeart(this)">♡</button>
-    <img class="photo" src="images/watermelon.jpg" alt="당도선별 수박">
-    <h4>당도선별 수박</h4>
-    <p class="old-price">33,000원</p>
-    <p class="price"><span class="sale">10%</span>29,700원</p>
-    <button onclick="addToCart(this)">장바구니에 담기</button>
-  </div>
-
-  <div class="card" data-category="수입">
-    <button class="heart" onclick="toggleHeart(this)">♡</button>
-    <img class="photo" src="images/pineapple.jpg" alt="골드 파인애플">
-    <h4>골드 파인애플</h4>
-    <p class="old-price">19,000원</p>
-    <p class="price"><span class="sale">10%</span>17,100원</p>
-    <button onclick="addToCart(this)">장바구니에 담기</button>
-  </div>
-
-  <div class="card" data-category="수입">
-    <button class="heart" onclick="toggleHeart(this)">♡</button>
-    <img class="photo" src="images/kiwi.jpg" alt="뉴질랜드 골드키위">
-    <h4>뉴질랜드 골드키위</h4>
-    <p class="old-price">31,000원</p>
-    <p class="price"><span class="sale">10%</span>27,900원</p>
-    <button onclick="addToCart(this)">장바구니에 담기</button>
-  </div>
-
-  <div class="card" data-category="국산">
-    <button class="heart" onclick="toggleHeart(this)">♡</button>
-    <img class="photo" src="images/plum.jpg" alt="새콤달콤 자두">
-    <h4>새콤달콤 자두</h4>
-    <p class="old-price">28,000원</p>
-    <p class="price"><span class="sale">10%</span>25,200원</p>
-    <button onclick="addToCart(this)">장바구니에 담기</button>
-  </div>
-
-  <div class="card" data-category="국산">
-    <button class="heart" onclick="toggleHeart(this)">♡</button>
-    <img class="photo" src="images/fig.jpg" alt="생 무화과">
-    <h4>생 무화과</h4>
-    <p class="old-price">39,000원</p>
-    <p class="price"><span class="sale">10%</span>35,100원</p>
-    <button onclick="addToCart(this)">장바구니에 담기</button>
-  </div>
-
-  <div class="card" data-category="국산">
-    <button class="heart" onclick="toggleHeart(this)">♡</button>
-    <img class="photo" src="images/mandarin.jpg" alt="제주 노지 감귤">
-    <h4>제주 노지 감귤</h4>
-    <p class="old-price">24,000원</p>
-    <p class="price"><span class="sale">10%</span>21,600원</p>
-    <button onclick="addToCart(this)">장바구니에 담기</button>
-  </div>
-
+<!-- 상품 목록 (Supabase 에서 가져와 채웁니다) -->
+<div class="products" id="productList">
+  <p class="loading">상품을 불러오는 중입니다...</p>
 </div>
 
 <!-- 검색 결과가 없을 때 -->
@@ -1787,6 +1651,74 @@
     closeCart();
     closeLogin();
   }
+
+  // ----- 상품 목록 (Supabase 에서 가져옵니다) -----
+
+  // 상품을 가져옵니다
+  function loadProducts() {
+    var list = document.getElementById('productList');
+
+    if (db === null) {
+      list.innerHTML = '<p class="loading">상품을 불러올 수 없습니다.</p>';
+      return;
+    }
+
+    db.from('products')
+      .select('id, name, origin, is_best, image, old_price, price')
+      .eq('on_sale', true)
+      .order('sort_no')
+      .then(function (result) {
+        if (result.error) {
+          list.innerHTML = '<p class="loading">상품을 불러오지 못했습니다.<br>잠시 후 새로고침해 주세요.</p>';
+          return;
+        }
+        drawProducts(result.data);
+      });
+  }
+
+  // 가져온 상품으로 카드를 만들어 화면에 그립니다
+  function drawProducts(rows) {
+    var list = document.getElementById('productList');
+    var html = '';
+
+    for (var i = 0; i < rows.length; i++) {
+      var item = rows[i];
+
+      // 추천상품이면 분류에 '추천'을 덧붙이고 표시를 답니다
+      var category = item.origin;
+      var bestTag = '';
+      if (item.is_best) {
+        category = item.origin + ' 추천';
+        bestTag = '<span class="best">추천상품</span>';
+      }
+
+      // 정가와 할인가로 할인율을 계산합니다
+      var sale = Math.round((item.old_price - item.price) / item.old_price * 100);
+
+      html = html +
+        '<div class="card" data-category="' + category + '">' +
+          '<button class="heart" onclick="toggleHeart(this)">♡</button>' +
+          bestTag +
+          '<img class="photo" src="' + item.image + '" alt="' + item.name + '">' +
+          '<h4>' + item.name + '</h4>' +
+          '<p class="old-price">' + addComma(item.old_price) + '원</p>' +
+          '<p class="price"><span class="sale">' + sale + '%</span>' + addComma(item.price) + '원</p>' +
+          '<button onclick="addToCart(this)">장바구니에 담기</button>' +
+        '</div>';
+    }
+
+    if (rows.length === 0) {
+      html = '<p class="loading">지금은 판매 중인 상품이 없습니다.</p>';
+    }
+
+    list.innerHTML = html;
+
+    // 검색어나 분류가 이미 골라져 있으면 그대로 적용합니다
+    filterProducts();
+  }
+
+  // 페이지를 열면 상품부터 가져옵니다
+  loadProducts();
 </script>
 
 </body>
