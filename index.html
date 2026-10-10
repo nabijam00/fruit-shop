@@ -672,35 +672,34 @@
   .login-box .msg.good {
     color: #2f7d5a;
   }
-  .login-buttons {
-    display: flex;
-    gap: 10px;
-  }
-  .login-buttons button {
-    flex: 1;
+  /* 가운데 큰 버튼 (로그인 또는 회원가입) */
+  .login-box .go {
+    display: block;
+    width: 100%;
+    margin-top: 4px;
     padding: 13px 0;
+    background-color: #b85c7a;
+    color: #ffffff;
+    border: none;
     border-radius: 20px;
     font-family: "굴림", Gulim, sans-serif;
     font-size: 15px;
     cursor: pointer;
   }
-  /* 왼쪽: 회원가입 */
-  .login-buttons .join {
-    background-color: #ffffff;
-    color: #8c2f4c;
-    border: 2px solid #eab0c2;
-  }
-  .login-buttons .join:hover {
-    background-color: #fdf2f6;
-  }
-  /* 오른쪽: 로그인 */
-  .login-buttons .in {
-    background-color: #b85c7a;
-    color: #ffffff;
-    border: none;
-  }
-  .login-buttons .in:hover {
+  .login-box .go:hover {
     background-color: #a04a68;
+  }
+  /* 로그인 <-> 회원가입 바꾸는 글씨 */
+  .login-box .switch {
+    margin: 16px 0 0 0;
+    text-align: center;
+    font-size: 13px;
+    color: #96637a;
+  }
+  .login-box .switch a {
+    color: #8c2f4c;
+    font-weight: bold;
+    margin-left: 4px;
   }
   /* 오른쪽 위 닫기(X) 버튼 */
   .login-box .x {
@@ -771,7 +770,8 @@
   <p class="wish">♥ 찜한 상품 <span id="wishCount">0</span>개</p>
   <button class="cart-btn" onclick="openCart()">장바구니 <span id="cartCount">0</span>개</button>
   <span class="who" id="who" style="display: none;"></span>
-  <button class="user-btn" id="loginBtn" onclick="openLogin()">회원가입 · 로그인</button>
+  <button class="user-btn" id="loginBtn" onclick="openLogin()">로그인</button>
+  <button class="user-btn" id="joinBtn" onclick="openJoin()">회원가입</button>
 </header>
 
 <!-- 메뉴 4개 -->
@@ -1041,24 +1041,32 @@
   </div>
 </div>
 
-<!-- 회원가입 · 로그인 창 -->
+<!-- 로그인 / 회원가입 창 (버튼에 따라 둘 중 하나로 바뀝니다) -->
 <div class="login-box" id="loginBox">
   <button class="x" onclick="closeLogin()" title="닫기">✕</button>
-  <h3>회원가입 · 로그인</h3>
-  <p class="hint">처음이시면 이메일과 비밀번호를 적고<br>회원가입을 눌러주세요</p>
+  <h3 id="loginTitle">로그인</h3>
+  <p class="hint" id="loginHint">이메일과 비밀번호를 적어주세요</p>
 
   <p class="msg" id="loginMsg"></p>
 
   <label for="emailBox">이메일</label>
   <input type="email" id="emailBox" placeholder="fruit@example.com">
 
-  <label for="pwBox">비밀번호 (6자 이상)</label>
+  <label for="pwBox" id="pwLabel">비밀번호</label>
   <input type="password" id="pwBox" placeholder="비밀번호">
 
-  <div class="login-buttons">
-    <button class="join" onclick="joinMember()">회원가입</button>
-    <button class="in" onclick="login()">로그인</button>
+  <!-- 회원가입일 때만 보입니다 -->
+  <div id="pw2Row" style="display: none;">
+    <label for="pw2Box">비밀번호 확인</label>
+    <input type="password" id="pw2Box" placeholder="비밀번호를 한 번 더">
   </div>
+
+  <button class="go" id="goBtn" onclick="doLoginBox()">로그인</button>
+
+  <p class="switch">
+    <span id="switchText">아직 회원이 아니신가요?</span>
+    <a href="#" id="switchLink" onclick="switchMode(); return false;">회원가입</a>
+  </p>
 </div>
 
 <!-- 담았을 때 잠깐 뜨는 알림 -->
@@ -1370,14 +1378,64 @@
     document.getElementById('wishCount').textContent = picked.length;
   }
 
-  // ----- 회원가입 · 로그인 -----
+  // ----- 로그인 / 회원가입 -----
 
   // 지금 로그인한 사람 (로그인 전에는 null)
   var me = null;
 
-  // 창을 엽니다
+  // 지금 창이 '로그인'인지 '회원가입'인지 기억해 둡니다
+  var loginMode = 'in';
+
+  // 로그인 창을 엽니다
   function openLogin() {
+    setMode('in');
+    showLoginBox();
+  }
+
+  // 회원가입 창을 엽니다
+  function openJoin() {
+    setMode('join');
+    showLoginBox();
+  }
+
+  // 창 아래 글씨를 눌러 로그인 <-> 회원가입을 오갑니다
+  function switchMode() {
+    if (loginMode === 'in') {
+      setMode('join');
+    } else {
+      setMode('in');
+    }
+  }
+
+  // 창의 내용을 로그인용 / 회원가입용으로 바꿉니다
+  function setMode(mode) {
+    loginMode = mode;
     document.getElementById('loginMsg').style.display = 'none';
+    document.getElementById('pwBox').value = '';
+    document.getElementById('pw2Box').value = '';
+
+    if (mode === 'join') {
+      document.getElementById('loginTitle').textContent = '회원가입';
+      document.getElementById('loginHint').innerHTML = '이메일과 비밀번호를 정해 적어주세요<br>가입하면 바로 쓰실 수 있습니다';
+      document.getElementById('pwLabel').textContent = '비밀번호 (6자 이상)';
+      document.getElementById('pw2Row').style.display = 'block';
+      document.getElementById('goBtn').textContent = '회원가입';
+      document.getElementById('switchText').textContent = '이미 회원이신가요?';
+      document.getElementById('switchLink').textContent = '로그인';
+      return;
+    }
+
+    document.getElementById('loginTitle').textContent = '로그인';
+    document.getElementById('loginHint').innerHTML = '이메일과 비밀번호를 적어주세요';
+    document.getElementById('pwLabel').textContent = '비밀번호';
+    document.getElementById('pw2Row').style.display = 'none';
+    document.getElementById('goBtn').textContent = '로그인';
+    document.getElementById('switchText').textContent = '아직 회원이 아니신가요?';
+    document.getElementById('switchLink').textContent = '회원가입';
+  }
+
+  // 창을 화면에 띄웁니다
+  function showLoginBox() {
     document.getElementById('cartBack').style.display = 'block';
     document.getElementById('loginBox').style.display = 'block';
   }
@@ -1400,6 +1458,15 @@
     }
   }
 
+  // 가운데 큰 버튼을 누르면 지금 모드에 맞게 움직입니다
+  function doLoginBox() {
+    if (loginMode === 'join') {
+      joinMember();
+    } else {
+      login();
+    }
+  }
+
   // 적어 넣은 이메일과 비밀번호를 확인합니다
   function readLoginForm() {
     var email = document.getElementById('emailBox').value.trim();
@@ -1415,6 +1482,11 @@
     }
     if (pw.length < 6) {
       sayLogin('비밀번호는 6자 이상으로 적어주세요.', false);
+      return null;
+    }
+    // 회원가입일 때는 비밀번호를 두 번 맞춰 봅니다
+    if (loginMode === 'join' && pw !== document.getElementById('pw2Box').value) {
+      sayLogin('두 번 적은 비밀번호가 서로 다릅니다.', false);
       return null;
     }
     return { email: email, pw: pw };
@@ -1475,6 +1547,7 @@
   function afterLogin(user, message) {
     me = user;
     document.getElementById('pwBox').value = '';
+    document.getElementById('pw2Box').value = '';
     drawWho();
     closeLogin();
     showToast(message);
@@ -1484,21 +1557,25 @@
   function drawWho() {
     var whoBox = document.getElementById('who');
     var loginBtn = document.getElementById('loginBtn');
+    var joinBtn = document.getElementById('joinBtn');
 
+    // 로그인 전: 로그인 / 회원가입 버튼 두 개
     if (me === null) {
       whoBox.style.display = 'none';
       loginBtn.style.display = 'inline-block';
-      loginBtn.textContent = '회원가입 · 로그인';
+      loginBtn.textContent = '로그인';
       loginBtn.setAttribute('onclick', 'openLogin()');
+      joinBtn.style.display = 'inline-block';
       return;
     }
 
-    // 이메일에서 @ 앞부분만 보여줍니다
+    // 로그인 후: 이름과 로그아웃 버튼
     whoBox.textContent = me.email.split('@')[0] + '님';
     whoBox.style.display = 'inline-block';
     loginBtn.style.display = 'inline-block';
     loginBtn.textContent = '로그아웃';
     loginBtn.setAttribute('onclick', 'logout()');
+    joinBtn.style.display = 'none';
   }
 
   // 페이지를 열 때 이미 로그인되어 있는지 확인합니다
