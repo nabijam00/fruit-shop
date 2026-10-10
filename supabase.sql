@@ -58,3 +58,31 @@ create policy products_read_all
   for select
   to anon, authenticated
   using (true);
+
+-- ============================================================
+-- 7) 회원 장바구니 표 (기기가 달라도 따라오게)
+-- ============================================================
+create table if not exists public.carts (
+  user_id    uuid primary key references auth.users (id) on delete cascade,
+  items      jsonb not null default '[]'::jsonb,  -- 담은 품목 [{name, price, count}, ...]
+  updated_at timestamptz not null default now()
+);
+
+-- 8) 자기 장바구니만 보고 고칠 수 있게 합니다
+alter table public.carts enable row level security;
+
+drop policy if exists carts_own_select on public.carts;
+create policy carts_own_select on public.carts
+  for select to authenticated using (auth.uid() = user_id);
+
+drop policy if exists carts_own_insert on public.carts;
+create policy carts_own_insert on public.carts
+  for insert to authenticated with check (auth.uid() = user_id);
+
+drop policy if exists carts_own_update on public.carts;
+create policy carts_own_update on public.carts
+  for update to authenticated using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+drop policy if exists carts_own_delete on public.carts;
+create policy carts_own_delete on public.carts
+  for delete to authenticated using (auth.uid() = user_id);
