@@ -414,6 +414,26 @@
     box-sizing: border-box;
     z-index: 11;
   }
+  /* 오른쪽 위 닫기(X) 버튼 */
+  .cart-box .x {
+    position: absolute;
+    top: 17px;
+    right: 17px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    color: #b08c9a;
+    font-size: 17px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .cart-box .x:hover {
+    background-color: #fbe0e8;
+    color: #6d3348;
+  }
   .cart-box h3 {
     margin: 0 0 15px 0;
     font-size: 21px;
@@ -875,6 +895,7 @@
 <!-- 장바구니 창 -->
 <div class="cart-back" id="cartBack" onclick="closeCart()"></div>
 <div class="cart-box" id="cartBox">
+  <button class="x" onclick="closeCart()" title="닫기">✕</button>
   <h3>장바구니</h3>
   <div id="cartList"></div>
   <div class="cart-sum" id="cartSum"></div>
