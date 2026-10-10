@@ -86,3 +86,28 @@ create policy carts_own_update on public.carts
 drop policy if exists carts_own_delete on public.carts;
 create policy carts_own_delete on public.carts
   for delete to authenticated using (auth.uid() = user_id);
+
+-- ============================================================
+-- 9) 찜한 상품 표
+-- ============================================================
+create table if not exists public.wishes (
+  user_id    uuid not null references auth.users (id) on delete cascade,
+  product_id text not null references public.products (id) on delete cascade,
+  created_at timestamptz not null default now(),
+  primary key (user_id, product_id)
+);
+
+-- 10) 자기 찜만 보고 고칠 수 있게 합니다
+alter table public.wishes enable row level security;
+
+drop policy if exists wishes_own_select on public.wishes;
+create policy wishes_own_select on public.wishes
+  for select to authenticated using (auth.uid() = user_id);
+
+drop policy if exists wishes_own_insert on public.wishes;
+create policy wishes_own_insert on public.wishes
+  for insert to authenticated with check (auth.uid() = user_id);
+
+drop policy if exists wishes_own_delete on public.wishes;
+create policy wishes_own_delete on public.wishes
+  for delete to authenticated using (auth.uid() = user_id);

@@ -1318,21 +1318,114 @@
     document.getElementById("products").scrollIntoView();
   }
 
+  // ----- 찜하기 -----
+
+  // 찜한 상품의 id 목록
+  var wishes = [];
+
   // 하트를 누르면 찜하기가 켜지고, 다시 누르면 풀립니다
   function toggleHeart(button) {
-    button.classList.toggle('on');
-    if (button.classList.contains('on')) {
-      button.textContent = '♥';
+    var card = button.parentNode;
+    var id = card.getAttribute('data-id');
+    var at = wishes.indexOf(id);
+
+    if (at < 0) {
+      wishes.push(id);
+      addWishToServer(id);
     } else {
-      button.textContent = '♡';
+      wishes.splice(at, 1);
+      removeWishFromServer(id);
     }
-    countHearts();
+
+    paintHearts();
+    saveWishes();
   }
 
-  // 찜한 개수를 맨 위에 보여줍니다
-  function countHearts() {
-    var picked = document.querySelectorAll('.heart.on');
-    document.getElementById('wishCount').textContent = picked.length;
+  // 찜한 상품에 하트를 채우고, 개수를 맨 위에 보여줍니다
+  function paintHearts() {
+    var cards = document.querySelectorAll('.card');
+
+    for (var i = 0; i < cards.length; i++) {
+      var heart = cards[i].querySelector('.heart');
+      if (wishes.indexOf(cards[i].getAttribute('data-id')) > -1) {
+        heart.classList.add('on');
+        heart.textContent = '♥';
+      } else {
+        heart.classList.remove('on');
+        heart.textContent = '♡';
+      }
+    }
+
+    document.getElementById('wishCount').textContent = wishes.length;
+  }
+
+  // 찜 목록을 이 브라우저에 저장해 둡니다
+  function saveWishes() {
+    try {
+      localStorage.setItem('fruitShopWish', JSON.stringify(wishes));
+    } catch (e) {
+      // 저장이 막혀 있는 브라우저면 그냥 넘어갑니다
+    }
+  }
+
+  // 저장해 둔 찜 목록을 꺼내옵니다
+  function loadWishes() {
+    var saved = null;
+    try {
+      saved = JSON.parse(localStorage.getItem('fruitShopWish'));
+    } catch (e) {
+      saved = null;
+    }
+
+    wishes = [];
+    if (saved && saved.length) {
+      for (var i = 0; i < saved.length; i++) {
+        if (typeof saved[i] === 'string') {
+          wishes.push(saved[i]);
+        }
+      }
+    }
+  }
+
+  // 로그인한 회원이면 Supabase 에도 찜을 남깁니다
+  function addWishToServer(id) {
+    if (db === null || me === null) {
+      return;
+    }
+    db.from('wishes').upsert({ user_id: me.id, product_id: id }).then(function (result) {
+      // 실패해도 이 브라우저에는 남아 있습니다
+    });
+  }
+
+  // 찜을 풀면 Supabase 에서도 지웁니다
+  function removeWishFromServer(id) {
+    if (db === null || me === null) {
+      return;
+    }
+    db.from('wishes').delete().eq('user_id', me.id).eq('product_id', id).then(function (result) {
+    });
+  }
+
+  // 로그인하면 저장해 둔 찜 목록을 가져와 지금 것과 합칩니다
+  function loadWishesFromServer() {
+    if (db === null || me === null) {
+      return;
+    }
+    db.from('wishes').select('product_id').eq('user_id', me.id).then(function (result) {
+      if (result.error) {
+        return;
+      }
+
+      // 로그인한 사람이 찜해 둔 것만 보여줍니다.
+      // 다른 사람이 찜한 것이 섞이지 않도록 합치지 않습니다.
+      wishes = [];
+      for (var i = 0; i < result.data.length; i++) {
+        wishes.push(result.data[i].product_id);
+      }
+
+      saveWishes();
+      paintHearts();
+    });
   }
 
   // ----- 로그인 / 회원가입 -----
@@ -1590,6 +1683,14 @@
     }
     db.auth.signOut().then(function () {
       me = null;
+
+      // 다음 사람에게 남지 않도록 장바구니와 찜을 비웁니다
+      cart = [];
+      wishes = [];
+      drawCart();
+      saveWishes();
+      paintHearts();
+
       drawWho();
       showToast('로그아웃했습니다.');
     });
@@ -1602,6 +1703,7 @@
     document.getElementById('pw2Box').value = '';
     drawWho();
     loadCartFromServer();
+    loadWishesFromServer();
     closeLogin();
     showToast(message);
   }
@@ -1646,6 +1748,7 @@
       }
       drawWho();
       loadCartFromServer();
+      loadWishesFromServer();
     });
   }
 
@@ -1699,7 +1802,7 @@
       var sale = Math.round((item.old_price - item.price) / item.old_price * 100);
 
       html = html +
-        '<div class="card" data-category="' + category + '">' +
+        '<div class="card" data-id="' + item.id + '" data-category="' + category + '">' +
           '<button class="heart" onclick="toggleHeart(this)">♡</button>' +
           bestTag +
           '<img class="photo" src="' + item.image + '" alt="' + item.name + '">' +
@@ -1715,6 +1818,9 @@
     }
 
     list.innerHTML = html;
+
+    // 찜해 둔 상품에 하트를 채웁니다
+    paintHearts();
 
     // 검색어나 분류가 이미 골라져 있으면 그대로 적용합니다
     filterProducts();
@@ -1760,7 +1866,8 @@
     drawCart();
   }
 
-  // 페이지를 열면 저장해 둔 장바구니를 되살립니다
+  // 페이지를 열면 저장해 둔 찜 목록과 장바구니를 되살립니다
+  loadWishes();
   loadCart();
 
   // ----- 회원 장바구니 (기기가 달라도 따라오게) -----
@@ -1788,37 +1895,24 @@
       if (result.error) {
         return;
       }
+
       var theirs = [];
       if (result.data && result.data.items) {
         theirs = result.data.items;
       }
-      mergeCart(theirs);
-      drawCart();
-    });
-  }
 
-  // 다른 기기에 담아 둔 것과 지금 것을 합칩니다
-  // 같은 상품이면 개수가 많은 쪽으로 맞춥니다
-  function mergeCart(theirs) {
-    for (var i = 0; i < theirs.length; i++) {
-      var item = theirs[i];
-      if (!item || !item.name || !(item.price > 0) || !(item.count > 0)) {
-        continue;
-      }
-
-      var same = null;
-      for (var j = 0; j < cart.length; j++) {
-        if (cart[j].name === item.name) {
-          same = cart[j];
+      // 로그인한 사람의 장바구니로 바꿉니다.
+      // 다른 사람이 쓰던 것이 섞이지 않도록 합치지 않습니다.
+      cart = [];
+      for (var i = 0; i < theirs.length; i++) {
+        var item = theirs[i];
+        if (item && item.name && item.price > 0 && item.count > 0) {
+          cart.push({ name: item.name, price: item.price, count: item.count });
         }
       }
 
-      if (same === null) {
-        cart.push({ name: item.name, price: item.price, count: item.count });
-      } else if (item.count > same.count) {
-        same.count = item.count;
-      }
-    }
+      drawCart();
+    });
   }
 </script>
 
