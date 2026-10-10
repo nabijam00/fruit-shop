@@ -2437,6 +2437,29 @@
     }
 
     markEmpty();
+
+    // 마지막으로 한 번 더 여쭤봅니다
+    var goods = 0;
+    for (var i = 0; i < cart.length; i++) {
+      goods = goods + cart[i].price * cart[i].count;
+    }
+    var ship = SHIP_FEE;
+    if (goods >= FREE_FROM) {
+      ship = 0;
+    }
+
+    var ask =
+      '받는 사람 : ' + name + '\n' +
+      '연락처     : ' + document.getElementById('rcvPhone').value.trim() + '\n' +
+      '주소       : ' + addr + '\n\n' +
+      '총 결제금액 : ' + addComma(goods + ship) + '원\n\n' +
+      '주문하시겠습니까?';
+
+    if (!confirm(ask)) {
+      sayOrder('주문을 멈췄습니다. 내용을 고치고 다시 눌러주세요.', false);
+      return;
+    }
+
     sayOrder('적어주신 내용을 확인했습니다. 주문 저장은 다음 단계에서 연결합니다.', true);
   }
 
