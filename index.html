@@ -842,6 +842,12 @@
     color: #4a3038;
     resize: none;
   }
+  /* 빠뜨린 칸 */
+  .order-box input.empty,
+  .order-box textarea.empty {
+    border-color: #d13a5e;
+    background-color: #fff6f8;
+  }
   /* 안내 문구 */
   .order-box .msg {
     display: none;
@@ -2170,23 +2176,54 @@
   // (주문을 저장하는 것은 다음 단계에서 연결할 예정입니다)
   function submitOrder() {
     var name = document.getElementById('rcvName').value.trim();
-    var phone = document.getElementById('rcvPhone').value.replace(/[^0-9]/g, '');
+    var phoneText = document.getElementById('rcvPhone').value.trim();
+    var phone = phoneText.replace(/[^0-9]/g, '');
     var addr = document.getElementById('rcvAddr').value.trim();
 
+    // 셋 중 하나라도 빠지면 주문할 수 없습니다
+    var missing = [];
     if (name === '') {
-      sayOrder('받는 사람 이름을 적어주세요.', false);
-      return;
+      missing.push('받는 사람 이름');
     }
-    if (phone.length < 10 || phone.substring(0, 2) !== '01') {
-      sayOrder('연락처를 바르게 적어주세요. (예: 010-1234-5678)', false);
-      return;
+    if (phoneText === '') {
+      missing.push('연락처');
     }
-    if (addr.length < 5) {
-      sayOrder('주소를 적어주세요.', false);
+    if (addr === '') {
+      missing.push('주소');
+    }
+
+    if (missing.length > 0) {
+      sayOrder(missing.join(', ') + '을(를) 적어주세요.', false);
+      markEmpty();
       return;
     }
 
+    // 다 적었으면 연락처 모양을 확인합니다
+    if (phone.length < 10 || phone.substring(0, 2) !== '01') {
+      sayOrder('연락처를 바르게 적어주세요. (예: 010-1234-5678)', false);
+      markEmpty();
+      return;
+    }
+
+    markEmpty();
     sayOrder('적어주신 내용을 확인했습니다. 주문 저장은 다음 단계에서 연결합니다.', true);
+  }
+
+  // 비어 있는 칸은 테두리를 붉게 표시해 줍니다
+  function markEmpty() {
+    var boxes = [
+      document.getElementById('rcvName'),
+      document.getElementById('rcvPhone'),
+      document.getElementById('rcvAddr')
+    ];
+
+    for (var i = 0; i < boxes.length; i++) {
+      if (boxes[i].value.trim() === '') {
+        boxes[i].classList.add('empty');
+      } else {
+        boxes[i].classList.remove('empty');
+      }
+    }
   }
 </script>
 
