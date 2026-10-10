@@ -1,0 +1,33 @@
+-- 지하네 은하수 과일가게 - Supabase 준비용 SQL
+-- Supabase 대시보드 > SQL Editor 에 그대로 붙여넣고 Run 을 누르세요.
+
+-- 1) 주문을 담아 둘 표를 만듭니다
+create table if not exists public.orders (
+  id          bigint generated always as identity primary key,
+  created_at  timestamptz not null default now(),
+  user_id     uuid references auth.users (id),  -- 로그인하고 주문하면 누가 샀는지 남습니다
+  items       jsonb   not null,                 -- 담은 품목 [{name, price, count}, ...]
+  goods_total integer not null,                 -- 상품금액
+  ship_fee    integer not null,                 -- 배송비
+  total       integer not null                  -- 총 결제금액
+);
+
+-- 2) 보안(RLS)을 켭니다. 켜 두지 않으면 누구나 전체 주문을 볼 수 있습니다.
+alter table public.orders enable row level security;
+
+-- 3) 주문은 누구나 넣을 수 있게 합니다 (로그인하지 않은 손님도 주문 가능)
+drop policy if exists "주문 넣기 허용" on public.orders;
+create policy "주문 넣기 허용"
+  on public.orders
+  for insert
+  to anon, authenticated
+  with check (true);
+
+-- 4) 읽기는 로그인한 사람이 자기 주문만 볼 수 있게 합니다
+--    (가게 주인은 Supabase 대시보드에서 전체 주문을 볼 수 있습니다)
+drop policy if exists "내 주문만 보기" on public.orders;
+create policy "내 주문만 보기"
+  on public.orders
+  for select
+  to authenticated
+  using (auth.uid() = user_id);
